@@ -1,0 +1,6 @@
+openai-agents>=0.0.16
+python-dotenv>=1.0.0
+pydantic>=2.10.0
+requests>=2.0.0
+charset_normalizer>=3.0.0
+chardet>=5.0.0 

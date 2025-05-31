@@ -1,4 +1,5 @@
 .env
 *testing.ipynb
 *.ipynb_checkpoints
+__pycache__/
 resume.txt
