@@ -27,7 +27,7 @@ Agent handoffs use typed filters and record functions to thread context through 
 
 1. Clone the repository:
    ```bash
-   git clone <repo_url> && cd job-search-agent-openai
+   git clone https://github.com/halstonblim/ai-job-search.git && cd job-search-agent-openai
    ```
 2. Create and activate a Python virtual environment, then install dependencies:
    ```bash
