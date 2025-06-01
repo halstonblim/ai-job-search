@@ -1,4 +1,4 @@
-# Job Search Agent
+# Multi-agent Job Search Pipeline with OpenAI Agents SDK and MCP
 
 ## Summary
 
