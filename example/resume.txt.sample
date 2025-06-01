@@ -1,0 +1,38 @@
+PROFESSIONAL SUMMARY
+Full-stack software engineer with 7 years of experience turning product ideas into resilient, customer-facing systems.
+TECHNICAL SKILLS
+Languages: Python, Go, TypeScript/JavaScript, SQL, Bash
+Frameworks & Libraries: Django REST, FastAPI, React, Redux, Node.js, gRPC, NumPy, Pandas
+Cloud & Ops: AWS (ECS Fargate, Lambda, S3, RDS, CloudWatch), Docker, Kubernetes, Terraform, GitHub Actions, CircleCI
+Data Stores: PostgreSQL, DynamoDB, Redis, Elasticsearch, Snowflake
+Practices: Domain-Driven Design, Test-Driven Development, Microservices, Observability (OpenTelemetry, Datadog), Agile/Scrum
+
+EXPERIENCE
+Senior Software Engineer — Orbit Freight, Austin, TX  Feb 2022 – Present
+• Lead engineer for a green-field shipment-pricing platform that processes 4 M+ quotes/day; designed event-driven microservice architecture with Kafka, reducing median response time from 850 ms to 120 ms.
+• Implemented Terraform IaC across three AWS accounts; cut manual infrastructure provisioning time by 90 %.
+• Drove migration from Jenkins to GitHub Actions, introducing parallel test shards and automated security scans; build times fell from 18 min to 7 min and CVE turnaround improved by 2 weeks.
+• Mentored two associate engineers—both promoted to mid-level within 12 months.
+
+Software Engineer — Lumen Analytics, Chicago, IL  Aug 2018 – Jan 2022
+• Developed realtime predictive-maintenance dashboard for IoT sensors using React, D3, and WebSockets; boosted customer retention by 17 %.
+• Created Go-based streaming ETL that ingested 30 GB/day into Snowflake; pipeline achieved 99.97 % uptime over 18 months.
+• Optimized Postgres queries for geospatial analytics, slashing P99 latency from 2.4 s to 300 ms.
+• Championed introduction of feature flags and trunk-based development, leading to 25 % faster release cadence.
+
+Software Engineering Intern — BlueWave Health, Boston, MA  May 2017 – Aug 2017
+• Prototyped HIPAA-compliant appointment-scheduling module in Django; still in production serving 15 K daily users.
+• Implemented unit and integration tests (pytest, Selenium) reaching 85 % coverage on legacy code.
+
+SELECTED PROJECTS
+• “Skylark” – Personal budgeting app with React Native and Firebase; 4,000+ monthly active users, featured on Product Hunt.
+• “WharfWatch” – Open-source Kubernetes admission controller written in Rust that enforces container security policies; 350 GitHub stars.
+• Advent of Code – Completed 25-day coding challenge in Go three years running; blog posts received 40 K page views.
+
+EDUCATION
+B.S. Computer Science, magna cum laude – University of Texas at Austin, 2018
+Relevant Coursework: Distributed Systems, Database Systems, Machine Learning, Operating Systems
+
+CERTIFICATIONS
+• AWS Certified Solutions Architect – Associate (2023)
+• Terraform Associate 003 (HashiCorp, 2024)

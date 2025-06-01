@@ -1,0 +1,194 @@
+================================================================================
+Job Search Results
+================================================================================
+
+=====Job Result 1=====
+url:            https://www.samsara.com/company/careers/roles/6774592?gh_jid=6774592
+title:          Software Engineer - GenAI at Samsara
+fit_score:      5
+reason:
+    The candidate is a highly experienced full-stack software engineer with 7 years
+    in software development, exceeding the job requirement of 1-3 years. The resume
+    shows strong experience shipping customer-facing features and iterating on them,
+    which aligns well with the job's primary responsibilities. The candidate is
+    skilled in Go, TypeScript, React, and AWS, all technologies the role favors.
+    Their experience with production system maintenance, debugging using logs and
+    metrics, and a growth mindset also matches the job requirements. Additionally,
+    the candidate prefers remote work and backend roles, both of which align with
+    the job's remote position and full-stack emphasis with backend skills. Overall,
+    the candidate is an excellent fit for this full stack software engineer role at
+    Samsara.
+failed:         False
+error_message:
+    
+
+=====Job Result 2=====
+url:            https://www.samsara.com/ca/company/careers/roles/6774592?gh_jid=6774592
+title:          Software Engineer - GenAI at Samsara
+fit_score:      5
+reason:
+    The candidate is an excellent fit for the Software Engineer - GenAI role at
+    Samsara. They have 7 years of software engineering experience, which exceeds the
+    1-3 years required. Their skills align closely with the job requirements,
+    including extensive experience with Go, TypeScript, React, MySQL (and other
+    related databases), AWS, and full-stack development. The candidate has a strong
+    background in building customer-facing systems, shipping features, maintaining
+    production systems, and collaborating cross-functionally, all key
+    responsibilities in the job description. Additionally, they have experience in
+    fast-paced environments and infrastructure deployment, meeting the preferred
+    qualifications. The candidate prefers remote and backend roles, which perfectly
+    matches the remote nature of the job and its full-stack requirements with a
+    backend focus. Overall, the technical fit, experience, and job preference
+    alignment make this a top match.
+failed:         False
+error_message:
+    
+
+=====Job Result 3=====
+url:            https://mark43.com/list-job/software-engineer/?gh_jid=6721336
+title:          Software Engineer at Mark43
+fit_score:      4
+reason:
+    The candidate has 7 years of full-stack software engineering experience with
+    strong backend skills using Go, Python, and JavaScript, and  experience with
+    React on the frontend, matching the job's requirement for Java and React
+    expertise. They have deep cloud infrastructure skills with AWS, microservices
+    architecture experience, and familiarity with databases including Redis and
+    Elasticsearch, all aligning well with the job's technical stack. They have
+    strong Agile and automated testing experience which meets job requirements. The
+    candidate also demonstrates leadership and mentoring qualities valued in the
+    preferred traits. However, the candidate's resume does not explicitly state Java
+    experience although they have similar language experience and the role
+    emphasizes Java production experience, which is a slight area of mismatch.
+    Overall, the candidate is a strong fit for this remote full-time software
+    engineer role focusing on cloud-based public safety software.
+failed:         False
+error_message:
+    
+
+=====Job Result 4=====
+url:            https://job-boards.greenhouse.io/appliedintuition/jobs/4420849005?gh_jid=4420849005
+title:          Software Engineer - New Grad at Applied Intuition
+fit_score:      4
+reason:
+    The candidate is a senior full-stack software engineer with 7 years of
+    experience and strong skills in backend technologies including Python, Go, SQL,
+    and cloud infrastructure such as AWS, Docker, and Kubernetes. This aligns well
+    with the job's requirements for designing engineering solutions in a fast-paced
+    environment and working across full-stack and infrastructure challenges. The
+    candidate also has experience with React and Docker, which matches the job's
+    desirable skills. Although the candidate prefers remote and backend roles, the
+    job is primarily onsite in Mountain View with some flexibility for remote work.
+    Overall, the candidate's experience and skills make them a strong fit for this
+    role, though not a perfect match due to location preference and some full-stack
+    emphasis in the job description.
+failed:         False
+error_message:
+    
+
+=====Job Result 5=====
+url:            https://www.grammarly.com/careers/jobs/engineering/software-engineer-back-end?gh_jid=5856122
+title:          Software Engineer, Back-End at Grammarly
+fit_score:      4
+reason:
+    The candidate has 7 years of software engineering experience with strong backend
+    development skills and technical expertise including AWS, Terraform IaC, and
+    microservice architectures, matching well with the job requirements. The
+    candidate uses cloud services and infrastructure as code, aligns with agile
+    practices, and mentors others, which fits Grammarly's qualifications well. The
+    preference for backend roles aligns with the job as a Back-End Software
+    Engineer. However, the candidate primarily codes in Go, Python, and TypeScript
+    rather than Java or JVM languages as GRM requires, which is a minor mismatch.
+    The job is hybrid in San Francisco, while the candidate prefers remote, which
+    may be a location preference gap. Overall, this is a strong fit but not perfect
+    due to language and location preference differences.
+failed:         False
+error_message:
+    
+
+=====Job Result 6=====
+url:            https://jobs.cisco.com/jobs/ProjectDetail/Lead-ML-Engineer-Meraki-Assurance-Remote-U-S-Canada/1439847
+title:          Lead ML Engineer, Meraki Assurance, Remote U.S./Canada at Cisco Meraki
+fit_score:      3
+reason:
+    The candidate has 7 years of software engineering experience with strong skills
+    in Python, AWS, Terraform, Kubernetes, Docker, and data engineering, which are
+    relevant to the Lead Machine Learning Engineer role at Cisco Meraki. However,
+    the role requires 12+ years of experience specifically in ML, data engineering,
+    or related fields, along with expertise in building large-scale AI models, deep
+    learning frameworks, and MLOps practices, which are not clearly demonstrated in
+    the candidate's resume. The candidate shows some exposure to relevant
+    technologies and machine learning coursework but lacks extensive direct
+    experience in ML engineering leadership and deep learning frameworks like
+    TensorFlow or PyTorch. The candidate prefers remote backend roles, aligning with
+    the position's remote nature and backend-focused ML engineering
+    responsibilities. Overall, the fit is decent but not strong due to gaps in
+    direct ML leadership and advanced ML skill requirements.
+failed:         False
+error_message:
+    
+
+=====Job Result 7=====
+url:            https://careers.gofasti.com/job-application/5553072004?gh_jid=5553072004
+title:          Junior Software Engineer at GoFasti
+fit_score:      3
+reason:
+    The candidate is a highly experienced full-stack engineer with 7 years of
+    experience and strong skills in backend and cloud technologies, including AWS,
+    PostgreSQL, and Node.js, which align well with many of the job requirements.
+    However, the candidate's expertise is primarily in Python, Go, and modern cloud
+    infrastructure and microservices, while the job requires 1–2 years of experience
+    specifically with legacy PHP, NestJS, NextJS, and LAMP stack technologies. The
+    candidate's seniority level is much higher than the junior-level role described,
+    which might affect role fit. The candidate prefers remote and backend roles,
+    which matches the job's remote-first environment and backend focus. Overall,
+    this is a moderate fit because the candidate has related experience and skills
+    but not the specific legacy PHP and junior-level experience the job requires.
+failed:         False
+error_message:
+    
+
+
+
+================================================================================
+Job Screening Failures
+================================================================================
+
+=====Job Result 8=====
+url:            
+title:          
+fit_score:      
+reason:
+    
+failed:         True
+error_message:
+    The URL https://careers.toasttab.com/jobs/senior-software-engineer-remote-
+    united-
+    states-8e92b591-f611-4a8f-92a2-46a15a05a16f?gh_jid=6755596&gh_src=74dd1b311us is
+    not reachable. It returned a 404 status code indicating the page was not found.
+
+=====Job Result 9=====
+url:            https://www.hubspot.com/careers/jobs/6757811?gh_jid=6757811
+title:          
+fit_score:      
+reason:
+    
+failed:         True
+error_message:
+    The provided URL does not contain a specific job posting. It leads to a general
+    HubSpot careers page with no detailed job description, requirements,
+    responsibilities, qualifications, or software and tools mentioned. Unable to
+    extract relevant job details.
+
+=====Job Result 10=====
+url:            
+title:          
+fit_score:      
+reason:
+    
+failed:         True
+error_message:
+    The URL https://www.coinbase.com/careers/positions/6886024?gh_jid=6886024 is not
+    reachable. It returned a status code 403, indicating access is forbidden. No
+    further extraction of job description is possible.
+
