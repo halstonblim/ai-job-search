@@ -1,23 +1,24 @@
-from agents import Agent
-from .context import JobScreenContext, record_fit_score, fetch_job_description
+from agents import Agent, ModelSettings
+from .context import JobScreenContext, fetch_job_and_user_info
 
 
-INSTRUCTIONS = (
-    "Given a job description, resume, and preferences, rate the fit of the job between 1 and 5. "
-    "Update the context with the fit score and fit reason. "
-    "Always hand off the result to the summary agent. "
-    "\n\n"
-    "Resume:\n\n"
-    f"{"\n".join(open('resume.txt','r').readlines())}\n\n"
-    "Preferences:"
-    "- No significant software engineering experience"
-    "- Less than 7 years of work experience"
-)
+def get_job_screen_agent() -> Agent[JobScreenContext]:
+    """Builds the job screening agent with dynamic resume content."""    
 
 
-def get_job_screen_agent():
+    INSTRUCTIONS = (
+        "You are a job screening agent. Your task is to:\n"
+        "1. First, fetch the job and user information from the context\n"
+        "2. Analyze how well the job description matches the resume and preferences\n"
+        "3. Rate the fit of the job between 1 and 5 (1=poor fit, 5=excellent fit)\n"
+        "4. Always hand off the result to the summary agent"
+    )
+
+
     return Agent[JobScreenContext](
         name="JobScreen",
         instructions=INSTRUCTIONS,
-        tools=[record_fit_score, fetch_job_description],
+        tools=[fetch_job_and_user_info],
+        model_settings=ModelSettings(tool_choice='required'),
+        model="gpt-4.1-mini"
     ) 

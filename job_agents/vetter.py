@@ -1,4 +1,4 @@
-from agents import Agent, function_tool
+from agents import Agent, function_tool, ModelSettings
 from pydantic import BaseModel
 import requests
 from .context import JobScreenContext
@@ -33,7 +33,7 @@ def check_url_reachability(url: str) -> dict:
         resp = requests.get(
             url,
             allow_redirects=True,
-            timeout=5,
+            timeout=15,
             headers={"User-Agent": "Mozilla/5.0"}
         )
         return {
@@ -52,7 +52,7 @@ def check_url_reachability(url: str) -> dict:
 
 
 INSTRUCTIONS = (
-    "You are a URL vetter. Your job is to check if a URL is reachable. "
+    "Your job is to check if a URL is reachable. "
     "If the URL is not reachable, record the status code and error message, "
     "then immediately summarize the result. If the URL is reachable, "
     "proceed to exract the job description from the URL. "
@@ -64,5 +64,7 @@ def get_url_vetter_agent():
         name="UrlVetter",
         instructions=INSTRUCTIONS,
         tools=[check_url_reachability],
+        model_settings=ModelSettings(tool_choice='required'),
         output_type=UrlVetterOutput,
+        model="gpt-4.1-mini",
     ) 

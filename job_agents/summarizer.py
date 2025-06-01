@@ -1,36 +1,17 @@
-from agents import Agent
-from pydantic import BaseModel
-from .context import JobScreenContext, fetch_fit_score, fetch_error_message, fetch_job_description
-from typing import Literal
+from agents import Agent, ModelSettings
+from .context import JobScreenContext, SummaryAgentOutput, fetch_job_screen_result
 
 
-class SummaryAgentOutput(BaseModel):
-    url: str
-    """The URL of the job posting"""
-
-    company: str
-    """The company name"""
-
-    title: str
-    """The job title"""
-
-    fit_score: Literal[0,1,2,3,4,5]
-    """The fit score of the job posting."""
-
-    reason: str
-    """Reason for the fit score"""
-
-    failed: bool
-    """Whether the job screening failed"""
-
-    error_message: str
-    """Any error message"""
+INSTRUCTIONS = "Your job is to fetch the result of the job screening using the fetch_job_screen_result tool."
 
 
 def get_summary_agent():
     return Agent[JobScreenContext](
         name="SummaryAgent",
-        instructions="Your job is to summarize the job search pipeline and any error messages.",
+        instructions=INSTRUCTIONS,
+        tools=[fetch_job_screen_result],
+        tool_use_behavior="stop_on_first_tool",
+        model_settings=ModelSettings(tool_choice='required'),
         output_type=SummaryAgentOutput,
-        tools=[fetch_fit_score, fetch_error_message, fetch_job_description]
+        model="gpt-4.1-nano",
     ) 

@@ -14,12 +14,13 @@ from job_agents.vetter import get_url_vetter_agent
 from job_agents.extractor import get_extract_description_agent
 from job_agents.screener import get_job_screen_agent
 from job_agents.summarizer import get_summary_agent
-from job_agents.context import JobScreenContext, ErrorMessage, record_error_on_handoff
+from job_agents.context import (JobScreenContext, ErrorMessage, UrlResult, JobDescription, FitScore, record_error_on_handoff, record_url, record_job_description, record_fit_score)
 from agents.extensions import handoff_filters
 from agents.mcp.server import MCPServerStdio
 
 from dotenv import load_dotenv
 import asyncio
+from pathlib import Path
 
 load_dotenv()
 
@@ -46,6 +47,9 @@ async def run_handoff_example(mcp_server, url: str):
     """
     # Create the context object
     context = JobScreenContext()
+    # Load resume and preferences into context
+    context.resume = Path("resume.txt").read_text(encoding='utf-8')
+    context.preferences = Path("preferences.txt").read_text(encoding='utf-8')
     
     # Create the agents
     vetter_agent = get_url_vetter_agent()
@@ -54,14 +58,35 @@ async def run_handoff_example(mcp_server, url: str):
     summary_agent = get_summary_agent()
     
     # Define handoffs between agents
-    failed_summary_handoff = handoff(agent=summary_agent, on_handoff=record_error_on_handoff, input_type=ErrorMessage, input_filter=message_filter)
-    vetter_handoff = handoff(agent=extractor_agent ,input_filter=message_filter)
-    extractor_handoff = handoff(agent=screener_agent, input_filter=message_filter)
+    failed_summary_handoff = handoff(
+        agent=summary_agent,
+        on_handoff=record_error_on_handoff,
+        input_type=ErrorMessage,
+        input_filter=message_filter,
+    )
+    vetter_handoff = handoff(
+        agent=extractor_agent,
+        on_handoff=record_url,
+        input_type=UrlResult,
+        input_filter=message_filter,
+    )
+    extractor_handoff = handoff(
+        agent=screener_agent,
+        on_handoff=record_job_description,
+        input_type=JobDescription,
+        input_filter=message_filter,
+    )
+    screener_handoff = handoff(
+        agent=summary_agent,
+        on_handoff=record_fit_score,
+        input_type=FitScore,
+        input_filter=message_filter,
+    )
 
     # Add handoffs to agents
-    vetter_agent.handoffs = [vetter_handoff, failed_summary_handoff]                                    
+    vetter_agent.handoffs = [vetter_handoff, failed_summary_handoff]
     extractor_agent.handoffs = [extractor_handoff, failed_summary_handoff]
-    screener_agent.handoffs = [handoff(agent=summary_agent, input_filter=message_filter)]
+    screener_agent.handoffs = [screener_handoff]
     
     # Start the handoff chain
     print("\nStarting handoff chain...")
@@ -98,7 +123,7 @@ async def main(url: str):
             print("\n" + "-"*40)
 
 if __name__ == "__main__":
-    # working example
+    # working example as of 2025-06-01
     url = "https://job-boards.greenhouse.io/figma/jobs/5364867004?gh_jid=5364867004"  
 
     # job board (bad) example
