@@ -1,15 +1,11 @@
 {
     "browser": {
       "browserName": "chromium",
-      "isolated": false,
+      "isolated": true,
       "launchOptions": {
         "headless": true,
         "channel": "chrome"
       }
-    },
-    "server": {
-      "port": 8080,
-      "host": "localhost"
     },
     "capabilities": ["core", "wait"],
     "vision": false,

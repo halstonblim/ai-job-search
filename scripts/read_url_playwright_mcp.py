@@ -49,9 +49,11 @@ async def main(url: str):
 
         INSTRUCTIONS = (
             "Your job extract the company, job title, and job description from the URL. "
-            "1. Navigate to the URL using the browser_navigate tool"
-            "2. Wait for 2 seconds using the browser_wait_for tool"
-            "3. Extract the company, job title, and job description from the snapshot"
+            "1. First, navigate to the URL using the browser_navigate tool "
+            "2.Examine the output of the browser_navigate tool "
+            "- If the text contains a job posting, extract the job description from the snapshot "
+            "- If the URL does not contain a job posting, wait for 2 seconds using the browser_wait_for tool and try to extract the job description "
+            "3. If the URL does not contain a job posting, return a short error message explaining why. "
             "Summarize the requirements, responsibilities, qualifications, software and tools of the job. "
             "Do not include unrelated text such as equal opportunity statements or company descriptions. "
             "If the URL does not contain a job posting, return a short error message explaining why. "
