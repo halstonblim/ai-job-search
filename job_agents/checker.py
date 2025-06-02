@@ -52,19 +52,19 @@ def check_url_reachability(url: str) -> dict:
 
 
 INSTRUCTIONS = (
-    "Your job is to check if a URL is reachable. "
-    "If the URL is not reachable, record the status code and error message, "
-    "then immediately summarize the result. If the URL is reachable, "
-    "proceed to exract the job description from the URL. "
+    "Check if the URL is reachable. "
+    "ALWAYS perform one of the two actions: "
+    "1. If the URL is not reachable, handoff to the summarizer. \n"
+    "2. If the URL is reachable, handoff to the page inspector. "
 )
 
 
-def get_url_vetter_agent():
+def get_url_checker_agent():
     return Agent[JobScreenContext](
-        name="UrlVetter",
+        name="UrlChecker",
         instructions=INSTRUCTIONS,
         tools=[check_url_reachability],
         model_settings=ModelSettings(tool_choice='required'),
         output_type=UrlVetterOutput,
-        model="gpt-4.1-mini",
+        model="gpt-4o-mini",
     ) 

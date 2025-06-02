@@ -142,13 +142,21 @@ class UrlResult(BaseModel):
     """The URL of the job posting"""
 
 
+class InspectionResult(BaseModel):
+    page_is_single_job: bool
+    """Whether the page is a single job description"""
+
+    inspection_reason: str
+    """The reason why the page is or is not a single job description"""
+
+
+async def record_inspection(ctx: RunContextWrapper[JobScreenContext], inspection: InspectionResult):
+    """Record the inspection in the context"""
+    print(f"\nPassed inspection result:\n\n{repr(inspection)}")
+
+
 async def record_url(ctx: RunContextWrapper[JobScreenContext], url: UrlResult):
     """Record the URL in the context"""
-    ctx.context.url = url.url
-
-
-async def record_job_description(ctx: RunContextWrapper[JobScreenContext], url: UrlResult):
-    """Record the job description in the context"""
     ctx.context.url = url.url
 
 
@@ -157,16 +165,18 @@ async def record_job_description(ctx: RunContextWrapper[JobScreenContext], job_d
     ctx.context.company = job_description.company
     ctx.context.title = job_description.title
     ctx.context.job_description = job_description.job_description
+    print(f"\nRecorded job description in context:\n\n{repr(job_description.job_description)}")
 
 
 async def record_fit_score(ctx: RunContextWrapper[JobScreenContext], fit_score: FitScore):
     """Record the fit score and fit reason in the context"""
     ctx.context.fit_score = fit_score.fit_score
     ctx.context.reason = fit_score.reason
+    print(f"\nRecorded fit score in context:\n\n{repr(fit_score)}")
 
 
 async def record_error_on_handoff(ctx: RunContextWrapper[JobScreenContext], error_message: ErrorMessage):
     """Record the error message in the context"""
     ctx.context.error_message = error_message.message
     ctx.context.failed = True
-    print("\n⚠️ Warning: Job screening failed. Error message recorded in context")
+    print(f"\n⚠️ Unable to screen job posting:\n\n{repr(error_message)}")

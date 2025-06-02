@@ -1,10 +1,10 @@
 """
-This tutorial script demonstrates how to use the MCP server for Playwright MCP to read a web page.
+This tutorial script demonstrates how to use the Playwright MCP server to read a web page.
 """
 import asyncio
 from dotenv import load_dotenv
 from pydantic import BaseModel
-from agents import Agent, Runner
+from agents import Agent, Runner, RunConfig
 from agents.mcp.server import MCPServerStdio
 
 load_dotenv()
@@ -21,12 +21,10 @@ class JobDescription(BaseModel):
 
 
 class PlaywrightWaitServer(MCPServerStdio):
-    """
-    Sub-class MCPServerStdio so only specified tools are available.
-    """
+    """Sub-class MCPServerStdio so only specified tools are available."""
     async def list_tools(self):
         all_tools = await super().list_tools()
-        return [t for t in all_tools if (t.name in ["browser_wait_for","browser_navigate","browser_snapshot"])]
+        return [t for t in all_tools if (t.name in ["browser_wait_for","browser_navigate"])]
 
 
 MCP_SERVER_PARAMS = {
@@ -41,11 +39,11 @@ MCP_SERVER_PARAMS = {
 async def main(url: str):
     async with PlaywrightWaitServer(params=MCP_SERVER_PARAMS) as pw_server:
 
-        print("Playwright MCP server initialized")
+        print("\nPlaywright MCP server initialized")
 
         tools = await pw_server.list_tools()
 
-        print(f"Available tools: {[t.name for t in tools]}")
+        print(f"\nAvailable tools: {[t.name for t in tools]}")
 
         INSTRUCTIONS = (
             "Your job extract the company, job title, and job description from the URL. "
@@ -67,11 +65,9 @@ async def main(url: str):
             model="o4-mini",
         )
 
-        results = await Runner.run(agent, input=url)
-        print(results.final_output)
+        results = await Runner.run(agent, input=url, run_config=RunConfig(workflow_name="Playwright MCP Demo"))
+        print(f"\n{repr(results.final_output)}")
 
 if __name__ == "__main__":
     test_url = "https://aurora.tech/careers/8014873002?gh_jid=8014873002"
-    test_url = "https://www.capitalonecareers.com/job/mclean/senior-manager-data-science-shopping/1732/81260356816"
-    test_url = "https://www.vectra.ai/about/jobs?gh_jid=6274750"
     asyncio.run(main(test_url)) 

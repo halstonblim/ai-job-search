@@ -2,7 +2,7 @@ from agents import Agent, ModelSettings
 from .context import JobScreenContext, SummaryAgentOutput, fetch_job_screen_result
 
 
-INSTRUCTIONS = "Your job is to fetch the result of the job screening using the fetch_job_screen_result tool."
+INSTRUCTIONS = "Fetch the result of the job screening"
 
 
 def get_summary_agent():
