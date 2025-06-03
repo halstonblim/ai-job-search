@@ -24,9 +24,14 @@ This repository demonstrates a multi-agent system that automates the job search 
 
 ## Key Features
 
-* **Multi-Agent Architecture**: Specialist agents work together through defined handoffs points and shared context. While some agents pass tasks sequentially (handoff collaboration), others run side by side (parallel execution).
-* **MCP-Powered Tool Ecosystem**: Leverages multiple Model Context Protocol (MCP) servers. For example, it uses SearxNG to handle web searches and Playwright to render JavaScript-heavy pages. This setup demonstrates how the system can call everything from simple Python functions to external MCP services.
-* **Built-In Resilience**: The framework automatically catches and logs errors (network failures, unexpected page content, etc.) and applies recovery steps when needed. That way, individual failures don’t stop the overall process.
+**Multi-Agent Architecture**
+* Specialist agents work together through defined handoffs points and shared context. While some agents pass tasks sequentially (handoff collaboration), others run side by side (parallel execution).
+
+**MCP-Powered Tool Ecosystem**
+* Leverages multiple Model Context Protocol (MCP) servers. For example, it uses SearxNG to handle web searches and Playwright to render JavaScript-heavy pages. This setup demonstrates how the system can call everything from simple Python functions to external MCP services.
+
+**Built-In Resilience**
+* The framework automatically catches and logs errors (network failures, unexpected page content, etc.) and modifies the handoff chain. That way, individual failures don’t stop the overall process.
 
 ---
 
