@@ -4,7 +4,7 @@
 
 ## Autonomous Multi-Agent Job Discovery & Screening Orchestration
 
-This repository demonstrates a multi-agent system that turns job searching from a slow, manual task into a fast, automated workflow. It’s built on the [OpenAI Agents SDK)[https://github.com/openai/openai-agents-python] and combines several coordination techniques—such as strict type checking, maintaining shared context, passing work between agents (handoffs), and calling external tools via MCP—to let specialized agents work together seamlessly.
+This repository demonstrates a multi-agent system that turns job searching from a slow, manual task into a fast, automated workflow. It’s built on the [OpenAI Agents SDK](https://github.com/openai/openai-agents-python) and combines several coordination techniques—such as strict type checking, maintaining shared context, passing work between agents (handoffs), and calling external tools via MCP—to let specialized agents work together seamlessly.
 
 ## Table of Contents
 
