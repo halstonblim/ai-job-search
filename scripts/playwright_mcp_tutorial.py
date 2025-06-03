@@ -31,7 +31,7 @@ MCP_SERVER_PARAMS = {
     "command": "npx",
     "args": [
         "@playwright/mcp@latest",
-        "--config", "config.json"
+        "--config", "playwright_config/config.json"
         ],
     "client_session_timeout_seconds": 60,
     }

@@ -4,5 +4,6 @@
 __pycache__/
 resume.txt
 preferences.txt
+test.txt
 logs/
 node_modules/

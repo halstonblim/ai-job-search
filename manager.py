@@ -66,7 +66,7 @@ class JobSearchManager:
     async def _screen_single_job(self, url: str) -> SummaryAgentOutput:
         """Screen a single job URL through the full pipeline."""
         async with PlaywrightServer(
-            params={"command": "npx", "args": ["@playwright/mcp@latest", "--config", "config.json"]},
+            params={"command": "npx", "args": ["@playwright/mcp@latest", "--config", "playwright_config/config.json"]},
             client_session_timeout_seconds=30,
         ) as server:
             try:

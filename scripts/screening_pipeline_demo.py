@@ -110,7 +110,7 @@ async def main(url: str):
     print('='*60)
 
     async with PlaywrightServer(
-        params={"command": "npx", "args": ["@playwright/mcp@latest", "--config", "config.json"]},
+        params={"command": "npx", "args": ["@playwright/mcp@latest", "--config", "playwright_config/config.json"]},
         client_session_timeout_seconds=30,
     ) as pw_server:
 

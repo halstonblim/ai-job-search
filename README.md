@@ -4,7 +4,8 @@
 
 ## Autonomous Multi-Agent Job Discovery & Screening Orchestration
 
-This repository demonstrates a multi-agent system that turns job searching from a slow, manual task into a fast, automated workflow. It’s built on the [OpenAI Agents SDK](https://github.com/openai/openai-agents-python) and combines several coordination techniques—such as strict type checking, maintaining shared context, passing work between agents (handoffs), and calling external tools via MCP—to let specialized agents work together seamlessly.
+This repository showcases an advanced **multi-agent collaboration system** that transforms job searching from a manual, time-intensive process into an intelligent, autonomous workflow. 
+- Built on the OpenAI Agents SDK, this system demonstrates advanced **agent orchestration patterns** where specialized autonomous agents coordinate to achieve complex, real-world hiring intelligence that would be impossible for a single agent to handle effectively.
 
 ## Table of Contents
 
@@ -139,10 +140,10 @@ To install and configure this server locally:
 
 Used by the **PageInspector** and **ExtractJobDescription** agents to render JavaScript-driven pages:
 
-1. Ensure a `config.json` file is present (configures headless Chromium).
+1. Ensure a `playwright_config/config.json` file is present (configures headless Chromium).
 2. Start the Playwright MCP server:
    ```bash
-   npx @playwright/mcp@latest --config config.json
+   npx @playwright/mcp@latest --config playwright_config/config.json
    ```
 3. Available tools: `browser_navigate`, `browser_wait_for`.
 
@@ -187,7 +188,10 @@ python searxng_mcp_tutorial.py
 .
 ├── main.py                       # Entrypoint to run the job search & screening flow
 ├── manager.py                    # Orchestrates the multi-agent workflow
-├── config.json                   # Playwright MCP configuration
+├── playwright_config/            # Playwright MCP configuration files
+│   ├── config.json               # Playwright MCP configuration
+│   ├── package.json              # NPM dependencies for Playwright MCP
+│   └── package-lock.json         # NPM lock file
 ├── job_agents/                   # Agent definitions & shared tools
 │   ├── searcher.py               # Builds the Job Searcher agent
 │   ├── checker.py                # UrlChecker agent & reachability tool
@@ -205,7 +209,6 @@ python searxng_mcp_tutorial.py
 │   ├── preferences.txt.sample
 │   └── result.txt.sample
 ├── requirements.txt              # Python dependencies
-├── package.json                  # JS dependencies for Playwright MCP
 └── README.md                     # This file
 ```
 
