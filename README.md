@@ -63,14 +63,11 @@ python main.py --job-title "software engineer" --search-only --output example/re
 
 ### Job Searcher
 
-**Intelligent Discovery Agent**
 - Utilizes the `web_search` tool provided by the **mcp-searxng** MCP server to discover job posting URLs.
 - For now, issues queries in the format `"<job title> gh_jid"` with `pageno=1` and `language='en'`.
 - Outputs a list of job URLs wrapped in the `SearchResults` model.
 
 ### Job Screener Multi-Agent
-
-**Advanced Multi-Agent Pipeline with Context Threading**
 
 Processes each job URL through a sequence of agents linked by handoffs with built-in failsafes:
 
