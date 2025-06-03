@@ -38,14 +38,14 @@ This entire process is split into two stages:
 
 ## Example
 
-Here are three ways to run the pipeline with the example files `example/resume.txt` and `example/preferences.txt`:
+Here are three ways to run the pipeline with the example files `example/resume.txt.sample` and `example/preferences.txt.sample`:
 
 1. Run the full search + screen pipeline and save results. Specifying `--top-n` means only up to `--top-n` URLs are sent through the job screening.
 
 ```bash
 python main.py --job-title "software engineer" --resume example/resume.txt.sample --preferences example/preferences.txt.sample --output example/report.txt.sample --top-n 10
 ```
-- You can examine the output in the `example/` folder
+- You can examine the output in the `example/report.txt.sample` folder
 
 2. Screen only mode, if the user-provides URLs (can be single URL or list of URLs)
 
