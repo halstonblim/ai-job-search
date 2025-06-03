@@ -38,7 +38,7 @@ This entire process is split into two stages:
 
 ## Example
 
-Using the example `resume.txt` and `preferences.txt` files provided in `example/`, there are three ways to run the pipeline:
+Here are three ways to run the pipeline with the example files `example/resume.txt` and `example/preferences.txt`:
 
 1. Run the full search + screen pipeline and save results. Specifying `--top-n` means only up to `--top-n` URLs are sent through the job screening.
 
