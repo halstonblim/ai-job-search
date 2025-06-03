@@ -152,7 +152,7 @@ class InspectionResult(BaseModel):
 
 async def record_inspection(ctx: RunContextWrapper[JobScreenContext], inspection: InspectionResult):
     """Record the inspection in the context"""
-    print(f"\nPassed inspection result:\n\n{repr(inspection)}")
+    # print(f"\nPassed inspection result:\n\n{repr(inspection)}")
 
 
 async def record_url(ctx: RunContextWrapper[JobScreenContext], url: UrlResult):
@@ -165,14 +165,14 @@ async def record_job_description(ctx: RunContextWrapper[JobScreenContext], job_d
     ctx.context.company = job_description.company
     ctx.context.title = job_description.title
     ctx.context.job_description = job_description.job_description
-    print(f"\nRecorded job description in context:\n\n{repr(job_description.job_description)}")
+    # print(f"\nRecorded job description in context:\n\n{repr(job_description.job_description)}")
 
 
 async def record_fit_score(ctx: RunContextWrapper[JobScreenContext], fit_score: FitScore):
     """Record the fit score and fit reason in the context"""
     ctx.context.fit_score = fit_score.fit_score
     ctx.context.reason = fit_score.reason
-    print(f"\nRecorded fit score in context:\n\n{repr(fit_score)}")
+    # print(f"\nRecorded fit score in context:\n\n{repr(fit_score)}")
 
 
 async def record_error_on_handoff(ctx: RunContextWrapper[JobScreenContext], error_message: ErrorMessage):

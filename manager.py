@@ -7,23 +7,28 @@ from typing import List, Optional, Dict, Any
 from pathlib import Path
 from agents import Runner, handoff, HandoffInputData, RunConfig
 from agents.mcp.server import MCPServerStdio
+from scripts.screening_pipeline_demo import PlaywrightServer
 from agents.extensions import handoff_filters
+from urllib.parse import urlparse
 
 from job_agents.searcher import build_job_searcher_agent, SearchResults
-from job_agents.vetter import get_url_vetter_agent
+from job_agents.checker import get_url_checker_agent
+from job_agents.inspector import get_page_inspector_agent
 from job_agents.extractor import get_extract_description_agent
 from job_agents.screener import get_job_screen_agent
 from job_agents.summarizer import get_summary_agent
-from job_agents.context import (JobScreenContext, 
-                                ErrorMessage, 
-                                FitScore, 
+from job_agents.context import (JobScreenContext,
+                                ErrorMessage,
                                 UrlResult,
-                                JobDescription, 
-                                SummaryAgentOutput, 
-                                record_error_on_handoff, 
-                                record_fit_score, 
+                                InspectionResult,
+                                JobDescription,
+                                FitScore,
+                                SummaryAgentOutput,
+                                record_error_on_handoff,
+                                record_url,
+                                record_inspection,
                                 record_job_description,
-                                record_url)
+                                record_fit_score)
 
 
 class JobSearchManager:
@@ -44,61 +49,76 @@ class JobSearchManager:
 
     def _message_filter(self, handoff_message_data: HandoffInputData) -> HandoffInputData:
         """Filter handoff messages to remove tool content and keep only recent history."""
-        data = handoff_filters.remove_all_tools(handoff_message_data)
+        handoff_message_data = handoff_filters.remove_all_tools(handoff_message_data)
+
         history = (
-            tuple(handoff_message_data.input_history[-1])
+            tuple(handoff_message_data.input_history[-1:])
             if isinstance(handoff_message_data.input_history, tuple)
             else handoff_message_data.input_history
         )
+
         return HandoffInputData(
             input_history=history,
-            pre_handoff_items=tuple(data.pre_handoff_items),
-            new_items=tuple(data.new_items),
+            pre_handoff_items=tuple(handoff_message_data.pre_handoff_items),
+            new_items=tuple(handoff_message_data.new_items),
         )
 
-    async def _screen_single_job(self, server, url: str) -> SummaryAgentOutput:
+    async def _screen_single_job(self, url: str) -> SummaryAgentOutput:
         """Screen a single job URL through the full pipeline."""
-        try:
-            # Create the context object
-            context = JobScreenContext()
-            context.resume = Path(self.resume_path).read_text(encoding='utf-8')
-            context.preferences = Path(self.preferences_path).read_text(encoding='utf-8')
+        async with PlaywrightServer(
+            params={"command": "npx", "args": ["@playwright/mcp@latest", "--config", "config.json"]},
+            client_session_timeout_seconds=30,
+        ) as server:
+            try:
+                # Create the context object
+                context = JobScreenContext()
+                # Load resume and preferences into context
+                context.resume = Path(self.resume_path).read_text(encoding='utf-8')
+                context.preferences = Path(self.preferences_path).read_text(encoding='utf-8')
 
-            # Create agents
-            vetter = get_url_vetter_agent()
-            extractor = get_extract_description_agent(server)
-            screener = get_job_screen_agent()
-            summary = get_summary_agent()
+                # Create the agents
+                url_checker_agent = get_url_checker_agent()
+                page_inspector_agent = get_page_inspector_agent(server)
+                job_extractor_agent = get_extract_description_agent(server)
+                screener_agent = get_job_screen_agent()
+                summary_agent = get_summary_agent()
 
-            # Define handoffs between agents
-            failed_handoff = handoff(agent=summary, on_handoff=record_error_on_handoff, input_type=ErrorMessage)
-            vetter_handoff = handoff(agent=extractor, on_handoff=record_url, input_type=UrlResult)
-            extractor_handoff = handoff(agent=screener, on_handoff=record_job_description, input_type=JobDescription)
-            screener_handoff = handoff(agent=summary, on_handoff=record_fit_score, input_type=FitScore)
+                # Define handoffs between agents
+                failed_summary_handoff = handoff(agent=summary_agent, on_handoff=record_error_on_handoff, input_type=ErrorMessage)
+                url_checker_handoff = handoff(agent=page_inspector_agent, on_handoff=record_url, input_type=UrlResult)
+                page_inspector_handoff = handoff(agent=job_extractor_agent, on_handoff=record_inspection, input_type=InspectionResult)
+                extractor_handoff = handoff(agent=screener_agent, on_handoff=record_job_description, input_type=JobDescription)
+                screener_handoff = handoff(agent=summary_agent, on_handoff=record_fit_score, input_type=FitScore)
 
-            # Add handoffs to agents
-            vetter.handoffs = [vetter_handoff, failed_handoff]
-            extractor.handoffs = [extractor_handoff, failed_handoff]
-            screener.handoffs = [screener_handoff]
+                # Add handoffs to agents
+                url_checker_agent.handoffs = [url_checker_handoff, failed_summary_handoff]
+                page_inspector_agent.handoffs = [page_inspector_handoff, failed_summary_handoff]
+                job_extractor_agent.handoffs = [extractor_handoff]
+                screener_agent.handoffs = [screener_handoff]
 
-            result = await Runner.run(vetter, input=url, context=context, run_config=RunConfig(handoff_input_filter=self._message_filter))
+                # Start the handoff chain
+                print("\nStarting handoff chain...")
+                domain_name = urlparse(url).netloc.replace("www.", "").split(".")[-2] # domain name before .com/org/etc
+                workflow_name = f"{domain_name} job screen"
+                run_config = RunConfig(handoff_input_filter=self._message_filter, workflow_name=workflow_name)
+                result = await Runner.run(url_checker_agent, input=url, context=context, run_config=run_config)
 
-            return result.final_output
-        except Exception as e:
-            return SummaryAgentOutput(
-                url=url,
-                company="",
-                title="",
-                fit_score=0,
-                reason=f"Processing failed: {e}",
-                failed=True,
-                error_message=str(e)
-            )
+                return result.final_output
+            except Exception as e:
+                return SummaryAgentOutput(
+                    url=url,
+                    company="",
+                    title="",
+                    fit_score=0,
+                    reason=f"Processing failed: {e}",
+                    failed=True,
+                    error_message=str(e)
+                )
 
-    async def screen_multiple_jobs(self, server, urls: List[str]) -> Dict[str, Any]:
+    async def screen_multiple_jobs(self, urls: List[str]) -> Dict[str, Any]:
         """Run screening of multiple job URLs in parallel and summarize results."""
         print(f"\nStarting parallel screening of {len(urls)} job postings...")
-        tasks = [self._screen_single_job(server, url) for url in urls]
+        tasks = [self._screen_single_job(url) for url in urls]
         results = await asyncio.gather(*tasks)
         return results
 
@@ -155,16 +175,14 @@ class JobSearchManager:
         async with MCPServerStdio(
             params={
                 "command": "mcp-searxng",
-                "env": {
-                    "SEARXNG_URL": "http://localhost:8080/",
-                    "SEARXNG_MCP_TIMEOUT": "30",
-                    },
+                "env": {"SEARXNG_URL": "http://localhost:8080/", "SEARXNG_MCP_TIMEOUT": "30"},
                 "client_session_timeout_seconds": 25,
             }
         ) as searxng_server:
             # Determine URLs to process
             if self.urls:
                 print("\nManual override: using provided URLs and skipping search agent")
+                print(f"URLs: {self.urls}")
                 urls = self.urls
             else:
                 print("\nSearching for jobs...",end="")
@@ -180,6 +198,7 @@ class JobSearchManager:
                     print(url)
                 return {"urls": urls}
 
-            results = await self.screen_multiple_jobs(searxng_server, urls)
+            # Run the screening pipeline via separate Playwright MCP server per URL
+            results = await self.screen_multiple_jobs(urls)
             self.compile_report(results)
             return results 

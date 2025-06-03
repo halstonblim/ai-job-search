@@ -124,5 +124,5 @@ async def main(url: str):
 
 
 if __name__ == "__main__":
-    url = "https://www.fanduel.careers/open-positions/senior-data-scientist-6745657?gh_jid=6745657"
+    url = "https://careers.roblox.com/jobs/6819493?gh_jid=6819493"
     asyncio.run(main(url))

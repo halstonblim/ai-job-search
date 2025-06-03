@@ -1,7 +1,10 @@
 import argparse
 import asyncio
+from dotenv import load_dotenv
 
 from manager import JobSearchManager
+
+load_dotenv()
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Job Search Agent Manager")
@@ -14,11 +17,11 @@ def parse_args() -> argparse.Namespace:
         help="Skip the search agent and run screening on provided URLs"
     )
     parser.add_argument(
-        "-r", "--resume", dest="resume_path", required=True,
+        "-r", "--resume", dest="resume_path",
         help="File path to resume (for the screening agent)"
     )
     parser.add_argument(
-        "-p", "--preferences", dest="preferences_path", required=True,
+        "-p", "--preferences", dest="preferences_path",
         help="File path to preferences (for the screening agent)"
     )
     parser.add_argument(
