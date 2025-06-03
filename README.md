@@ -4,7 +4,10 @@
 
 ## Autonomous Multi-Agent Job Discovery & Screening Orchestration
 
-This repository demonstrates a multi-agent system that automates the job search process. Built with the OpenAI Agents SDK, it uses specialized agents working together to handle different aspects of screening and analysis that would be difficult for any single agent to manage alone.
+This repository demonstrates a multi-agent system that automates the job search process. Built with the OpenAI Agents SDK, it uses specialized agents working together to handle different aspects of screening and analysis that would be difficult for any single agent to manage alone. This entire process is split into two stages:
+
+1. **Job Searcher**: Gathers a list of job posting URLs.
+2. **Job Screener**: Takes those URLs and, in parallel, evaluates each one against the user’s resume and preferences. For every job URL, it returns a fit score and a short rationale explaining why it’s a good (or poor) match.
 
 ## Table of Contents
 
@@ -32,14 +35,6 @@ This repository demonstrates a multi-agent system that automates the job search 
 
 **Built-In Resilience**
 * The framework automatically catches and logs errors (network failures, unexpected page content, etc.) and modifies the handoff chain. That way, individual failures don’t stop the overall process.
-
----
-
-This entire process is split into two stages:
-
-1. **Job Searcher**: Gathers a list of job posting URLs.
-2. **Job Screener**: Takes those URLs and, in parallel, evaluates each one against the user’s resume and preferences. For every job URL, it returns a fit score and a short rationale explaining why it’s a good (or poor) match.
-
 
 ## Example
 
