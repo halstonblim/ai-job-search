@@ -45,7 +45,7 @@ Here are three ways to run the pipeline with the example files `example/resume.t
 ```bash
 python main.py --job-title "software engineer" --resume example/resume.txt.sample --preferences example/preferences.txt.sample --output example/report.txt.sample --top-n 10
 ```
-- You can examine the output in the `example/report.txt.sample` folder
+- You can examine the output in `example/report.txt.sample`
 
 2. Screen only mode, if the user-provides URLs (can be single URL or list of URLs)
 
