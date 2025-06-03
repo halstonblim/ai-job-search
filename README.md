@@ -95,16 +95,11 @@ Processes each job URL through a sequence of agents linked by handoffs with buil
    - Consolidates the screening results into `SummaryAgentOutput`.
    - Gracefully logs any failures with the `failed` and `error_message` fields.
 
-The logic above robustly handles network errors, proper loading of javascript content, non-job pages, and error logging for transparent reporting.
-
-**Key Technical Innovations:**
+In addition to the agents, the system includes local context and handoffs between the agents. Handoffs trigger actions which store typed output into local context. This allows us to not rely on the query history and save input tokens. 
 
 - **Context Threading**: Each agent pipeline maintains a shared `JobScreenContext` that gets populated and passed through the handoff chain, enabling sophisticated state management across agent boundaries.
 - **Typed Handoff System**: Uses strongly-typed Pydantic models (`UrlResult`, `JobDescription`, `FitScore`) to ensure data integrity across agent transitions.
-- **Hybrid Tool Architecture**: Seamlessly combines custom Python tools, OpenAI managed tools, and external MCP servers in a single workflow.
-- **Fault-Tolerant Orchestration**: Multiple error escape routes ensure failed URLs don't crash the entire workflow, with detailed error attribution and recovery.
 
-This represents a new paradigm in **scalable, production-ready agentic systems** - moving beyond simple chatbots to sophisticated multi-agent orchestration that delivers real business value.
 
 ## MCP Servers
 
