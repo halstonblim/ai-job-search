@@ -2,21 +2,37 @@
 
 ![Multi-agentic workflow](flowchart.png)
 
-## Multi-Agent Job Discovery & Screening Orchestration
+## Autonomous Multi-Agent Job Discovery & Screening Orchestration
 
-This repository contains a multi-agent system that automates job searching using the OpenAI Agents SDK. Specialized agents work together to handle tasks that a single agent cannot manage on its own.
+This repository showcases an advanced **multi-agent collaboration system** that transforms job searching from a manual, time-intensive process into an intelligent, autonomous workflow. 
+- Built on the OpenAI Agents SDK, this system demonstrates advanced **agent orchestration patterns** where specialized autonomous agents coordinate to achieve complex, real-world hiring intelligence that would be impossible for a single agent to handle effectively.
 
-Key features:
+## Table of Contents
 
-* **Multi-Agent Architecture**: Agents are connected with OpenAI Agent SDK handoffs, allowing models to intelligently decide which chain to follow. This also means we can fully leverage OpenAI's workflow tracing to examine handoff decisions.
-* **MCP Tool Integration**: Connects to multiple Model Context Protocol (MCP) servers: SearxNG for web search and Playwright for JavaScript rendering and scraping.
-* **Local Context Optimization**: Stores intermediate output and user preferences in local context instead of query history to achieve token cost optimization.
-* **Parallel Execution**: Screen many job URLs at the same time, with each URL processed by its own agent pipeline.
-  
-The workflow is split into two pipelines:
+- [What Makes This System Effective](#what-makes-this-system-effective)
+- [Example](#example)
+- [Agent Descriptions](#agent-descriptions)
+  - [Job Searcher](#job-searcher)
+  - [Job Screener Multi-Agent](#job-screener-multi-agent)
+- [MCP Servers](#mcp-servers)
+  - [mcp-searxng (Web Search)](#mcp-searxng-web-search)
+  - [Playwright MCP Server (Dynamic Content)](#playwright-mcp-server-dynamic-content)
+- [Installation](#installation)
+  - [Prerequisites](#prerequisites)
+  - [Setup](#setup)
+- [Project Structure](#project-structure)
+- [Next Steps](#next-steps)
 
-1. **Job Searcher**: Gathers a list of job URLs.
-2. **Job Screener**: Receives those URLs and processes them in parallel. For each URL, it generates a fit score and explanation based on the user’s resume and preferences.
+## What Makes This System Effective
+
+What makes this system effective:
+
+- **Sophisticated Multi-Agent Architecture**: Uses both *handoff collaboration* and *parallel execution* patterns where specialist agents coordinate seamlessly through typed handoffs and shared context management.
+- **MCP-Powered Tool Ecosystem**: Integrates multiple **Model Context Protocol (MCP) servers** including SearxNG for web search and Playwright for dynamic JavaScript rendering - showcasing the full spectrum of tool types from custom Python functions to external MCP services.
+- **Massively Parallel Workflow Execution**: Processes dozens of job URLs simultaneously through independent agent pipelines, each running its own multi-agent screening workflow in parallel - delivering enterprise-scale performance.
+- **Resilient Framework**: Built-in failsafes handle network errors, malformed content, and edge cases gracefully with transparent error logging and recovery patterns.
+
+The task is performed across two agent pipeline: the **Job Searcher** and the **Job Screener**. The Job Searcher compiles a list of URLS, which is then sent to the Job Screener which processes the URLs --- in parallel --- providing a fit score and rationale for each URL/job description taking into account user provided ***resume*** and ***preferences***.
 
 ## Example
 
@@ -43,11 +59,14 @@ python main.py --job-title "software engineer" --search-only --output example/re
 
 ### Job Searcher
 
+**Intelligent Discovery Agent**
 - Utilizes the `web_search` tool provided by the **mcp-searxng** MCP server to discover job posting URLs.
 - For now, issues queries in the format `"<job title> gh_jid"` with `pageno=1` and `language='en'`.
 - Outputs a list of job URLs wrapped in the `SearchResults` model.
 
 ### Job Screener Multi-Agent
+
+**Advanced Multi-Agent Pipeline with Context Threading**
 
 Processes each job URL through a sequence of agents linked by handoffs with built-in failsafes:
 
@@ -74,10 +93,14 @@ Processes each job URL through a sequence of agents linked by handoffs with buil
 
 The logic above robustly handles network errors, proper loading of javascript content, non-job pages, and error logging for transparent reporting.
 
-**Context Threading and Handoff Transition Between Agents:**
+**Key Technical Innovations:**
 
 - **Context Threading**: Each agent pipeline maintains a shared `JobScreenContext` that gets populated and passed through the handoff chain, enabling sophisticated state management across agent boundaries.
 - **Typed Handoff System**: Uses strongly-typed Pydantic models (`UrlResult`, `JobDescription`, `FitScore`) to ensure data integrity across agent transitions.
+- **Hybrid Tool Architecture**: Seamlessly combines custom Python tools, OpenAI managed tools, and external MCP servers in a single workflow.
+- **Fault-Tolerant Orchestration**: Multiple error escape routes ensure failed URLs don't crash the entire workflow, with detailed error attribution and recovery.
+
+This represents a new paradigm in **scalable, production-ready agentic systems** - moving beyond simple chatbots to sophisticated multi-agent orchestration that delivers real business value.
 
 ## MCP Servers
 
@@ -113,16 +136,12 @@ To install and configure this server locally:
    curl -i "http://localhost:8080/search?q=hello&format=json"
    ```
 
-### Playwright MCP Server (Scrape Dynamic Content)
+### Playwright MCP Server (Dynamic Content)
 
 Used by the **PageInspector** and **ExtractJobDescription** agents to render JavaScript-driven pages:
 
-0. Install 
-   ```bash
-   npm i -g @playwright/mcp@latest
-   ```
 1. Ensure a `config.json` file is present (configures headless Chromium).
-2. Start the [Playwright MCP server](https://github.com/microsoft/playwright-mcp/tree/675b083db372c148128d818927a2dbf84629ffd3):
+2. Start the Playwright MCP server:
    ```bash
    npx @playwright/mcp@latest --config config.json
    ```
@@ -132,7 +151,7 @@ Used by the **PageInspector** and **ExtractJobDescription** agents to render Jav
 
 ### Prerequisites
 
-- Node.js (`node -v` should show >= 20.0.0)
+- Node.js
 - Python 3.11+
 - Docker
 
