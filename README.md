@@ -4,12 +4,11 @@
 
 ## Autonomous Multi-Agent Job Discovery & Screening Orchestration
 
-This repository showcases an advanced **multi-agent collaboration system** that transforms job searching from a manual, time-intensive process into an intelligent, autonomous workflow. 
-- Built on the OpenAI Agents SDK, this system demonstrates advanced **agent orchestration patterns** where specialized autonomous agents coordinate to achieve complex, real-world hiring intelligence that would be impossible for a single agent to handle effectively.
+This repository demonstrates a multi-agent system that automates the job search process. Built with the OpenAI Agents SDK, it uses specialized agents working together to handle different aspects of screening and analysis that would be difficult for any single agent to manage alone.
 
 ## Table of Contents
 
-- [What Makes This System Effective](#what-makes-this-system-effective)
+- [Key Features](#key-features)
 - [Example](#example)
 - [Agent Descriptions](#agent-descriptions)
   - [Job Searcher](#job-searcher)
@@ -23,33 +22,38 @@ This repository showcases an advanced **multi-agent collaboration system** that 
 - [Project Structure](#project-structure)
 - [Next Steps](#next-steps)
 
-## What Makes This System Effective
+## Key Features
 
-What makes this system effective:
+* **Multi-Agent Architecture**: Specialist agents work together through defined handoffs points and shared context. While some agents pass tasks sequentially (handoff collaboration), others run side by side (parallel execution).
+* **MCP-Powered Tool Ecosystem**: Leverages multiple Model Context Protocol (MCP) servers. For example, it uses SearxNG to handle web searches and Playwright to render JavaScript-heavy pages. This setup demonstrates how the system can call everything from simple Python functions to external MCP services.
+* **Built-In Resilience**: The framework automatically catches and logs errors (network failures, unexpected page content, etc.) and applies recovery steps when needed. That way, individual failures don’t stop the overall process.
 
-- **Sophisticated Multi-Agent Architecture**: Uses both *handoff collaboration* and *parallel execution* patterns where specialist agents coordinate seamlessly through typed handoffs and shared context management.
-- **MCP-Powered Tool Ecosystem**: Integrates multiple **Model Context Protocol (MCP) servers** including SearxNG for web search and Playwright for dynamic JavaScript rendering - showcasing the full spectrum of tool types from custom Python functions to external MCP services.
-- **Massively Parallel Workflow Execution**: Processes dozens of job URLs simultaneously through independent agent pipelines, each running its own multi-agent screening workflow in parallel - delivering enterprise-scale performance.
-- **Resilient Framework**: Built-in failsafes handle network errors, malformed content, and edge cases gracefully with transparent error logging and recovery patterns.
+---
 
-The task is performed across two agent pipeline: the **Job Searcher** and the **Job Screener**. The Job Searcher compiles a list of URLS, which is then sent to the Job Screener which processes the URLs --- in parallel --- providing a fit score and rationale for each URL/job description taking into account user provided ***resume*** and ***preferences***.
+This entire process is split into two stages:
+
+1. **Job Searcher**: Gathers a list of job posting URLs.
+2. **Job Screener**: Takes those URLs and, in parallel, evaluates each one against the user’s resume and preferences. For every job URL, it returns a fit score and a short rationale explaining why it’s a good (or poor) match.
+
 
 ## Example
 
-Run the full search + screen pipeline and save results, restricting to first 10 results:
+Using the example `resume.txt` and `preferences.txt` files provided in `example/`, there are three ways to run the pipeline:
+
+1. Run the full search + screen pipeline and save results. Specifying `--top-n` means only up to `--top-n` URLs are sent through the job screening.
 
 ```bash
 python main.py --job-title "software engineer" --resume example/resume.txt.sample --preferences example/preferences.txt.sample --output example/report.txt.sample --top-n 10
 ```
-- Check out the output in the `example/` folder
+- Example output in the `example/` folder
 
-Manually screen on user-provided URLs:
+2. Screen only mode, if the user-provides URLs (can be single URL or list of URLs)
 
 ```bash
 python main.py --job-title "software engineer" --resume example/resume.txt.sample --preferences example/preferences.txt.sample --output example/report.txt.sample --urls https://company.com/careers/ai-engineer-ii https://greenhouse.io/jobs/ml-scientist
 ```
 
-Search only mode, just return URLs without screening
+3. Search only mode, just return URLs without screening
 
 ```bash
 python main.py --job-title "software engineer" --search-only --output example/report.txt.sample 
