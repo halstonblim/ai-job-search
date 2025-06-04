@@ -63,7 +63,11 @@ async def main():
         filename=str(log_path),
         filemode="w",
     )
-
+    # Suppress HTTP request INFO logs
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
+    logging.getLogger("httpx").setLevel(logging.WARNING)
+    logging.getLogger("requests").setLevel(logging.WARNING)
+    logging.getLogger("openai").setLevel(logging.WARNING)
     logging.info(f"CLI arguments: {args}")
 
     manager = JobSearchManager(
@@ -74,7 +78,17 @@ async def main():
         desired_count=args.desired_count,
         search_only=args.search_only
     )
-    results = await manager.run()
+    try:
+        results = await manager.run()
+    except Exception as e:
+        logging.error(f"Error during job search run: {e}", exc_info=True)
+        if args.search_only:
+            results = {"urls": []}
+        else:
+            results = []
+    finally:
+        logging.info("Job Search Completed")
+
     if args.search_only:
         # Write URLs to output file, one per line
         with open(args.output_path, "w", encoding="utf-8") as f:

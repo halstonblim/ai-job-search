@@ -88,7 +88,7 @@ async def run_handoff_example(mcp_server, url: str):
     run_config = RunConfig(handoff_input_filter=message_filter, workflow_name="Job Screening Pipeline")
     result = await Runner.run(url_checker_agent, input=url, context=context, run_config=run_config)
     
-    return result
+    return result.final_output
 
 
 class PlaywrightServer(MCPServerStdio):

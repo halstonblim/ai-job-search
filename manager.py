@@ -70,7 +70,7 @@ class JobSearchManager:
         """Screen a single job URL through the full pipeline."""
         async with PlaywrightServer(
             params={"command": "npx", "args": ["@playwright/mcp@latest", "--config", "playwright_config/config.json"]},
-            client_session_timeout_seconds=30,
+            client_session_timeout_seconds=60,
         ) as server:
             try:
                 # Create the context object
@@ -118,22 +118,42 @@ class JobSearchManager:
                     error_message=str(e)
                 )
 
-    async def screen_multiple_jobs(self, urls: List[str]) -> Dict[str, Any]:
-        """Run screening of multiple job URLs in parallel."""
-        logging.info(f"Starting parallel screening of {len(urls)} job postings...")
-        tasks = [self._screen_single_job(url) for url in urls]
-        results = await asyncio.gather(*tasks)
-        return results
+    async def screen_multiple_jobs(self, urls: List[str]) -> List[SummaryAgentOutput]:
+        """Run screening of multiple job URLs in parallel, continuing on individual errors."""
+        # Launch screening tasks concurrently, allowing individual failures to be caught
+        tasks = [asyncio.create_task(self._screen_single_job(url)) for url in urls]
+        raw_results = await asyncio.gather(*tasks, return_exceptions=True)
+        # Normalize results: wrap any unexpected outputs or exceptions as failed SummaryAgentOutput
+        final_results: List[SummaryAgentOutput] = []
+        for url, result in zip(urls, raw_results):
+            if isinstance(result, Exception) or not isinstance(result, SummaryAgentOutput):
+                logging.error(f"Error screening {url}: {result}", exc_info=True)
+                final_results.append(SummaryAgentOutput(
+                    url=url,
+                    company="",
+                    title="",
+                    fit_score=0,
+                    reason=f"Processing failed: {result}",
+                    failed=True,
+                    error_message=str(result)
+                ))
+            else:
+                final_results.append(result)
+        return final_results
 
     async def screen_jobs_in_batches(self, urls: List[str]) -> List[SummaryAgentOutput]:
         """Screen URLs in batches respecting the batch_size setting."""
         all_results: List[SummaryAgentOutput] = []
         for i in range(0, len(urls), self.batch_size):
+            batch_number = i // self.batch_size + 1
             batch = urls[i : i + self.batch_size]
+            logging.info(f"Starting batch {batch_number} of parallel screening of {len(batch)} job postings")
+            successful_count = len([r for r in all_results if not getattr(r, 'failed', False)])
+            logging.info(f"Current successful job screens: {successful_count}")
             batch_results = await self.screen_multiple_jobs(batch)
             all_results.extend(batch_results)
             if self.desired_count is not None:
-                successful = [r for r in all_results if not r.failed]
+                successful = [r for r in all_results if not getattr(r, 'failed', False)]
                 if len(successful) >= self.desired_count:
                     break
         return all_results
@@ -207,8 +227,10 @@ class JobSearchManager:
                     logging.info("Search only mode: found URLs:")
                     for url in urls:
                         logging.info(url)
+                    logging.info("Job Search Completed")
                     return {"urls": urls}
                 results = await self.screen_jobs_in_batches(urls)
+                logging.info("Job Search Completed")
                 return results
 
             # Automatic search mode
@@ -216,6 +238,7 @@ class JobSearchManager:
             pending_urls: List[str] = []
             results: List[SummaryAgentOutput] = []
             successful = 0
+            batch_number = 0
 
             while True:
                 if not pending_urls:
@@ -226,12 +249,14 @@ class JobSearchManager:
                     pending_urls.extend(new_urls)
                     page += 1
 
-
                 batch = pending_urls[: self.batch_size]
                 pending_urls = pending_urls[self.batch_size:]
+                batch_number += 1
+                logging.info(f"Starting batch {batch_number} of parallel screening of {len(batch)} job postings")
+                logging.info(f"Current successful job screens: {successful}")
                 batch_results = await self.screen_multiple_jobs(batch)
                 results.extend(batch_results)
-                successful += len([r for r in batch_results if not r.failed])
+                successful += len([r for r in batch_results if not getattr(r, 'failed', False)])
 
                 if self.search_only:
                     continue
@@ -242,5 +267,7 @@ class JobSearchManager:
                 logging.info("Search only mode: found URLs:")
                 for url in [r.url for r in results]:
                     logging.info(url)
+                logging.info("Job Search Completed")
                 return {"urls": [r.url for r in results]}
+            logging.info("Job Search Completed")
             return results
