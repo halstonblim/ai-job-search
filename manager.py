@@ -99,10 +99,10 @@ class JobSearchManager:
                 screener_agent.handoffs = [screener_handoff]
 
                 # Start the handoff chain
-                print("\nStarting handoff chain...")
                 domain_name = urlparse(url).netloc.replace("www.", "").split(".")[-2] # domain name before .com/org/etc
                 workflow_name = f"{domain_name} job screen"
-                run_config = RunConfig(handoff_input_filter=self._message_filter, workflow_name=workflow_name)
+                print(f"\nStarting handoff chain for {workflow_name}...")
+                run_config = RunConfig(handoff_input_filter=self._message_filter, workflow_name=workflow_name)            
                 result = await Runner.run(url_checker_agent, input=url, context=context, run_config=run_config)
 
                 return result.final_output
@@ -141,7 +141,8 @@ class JobSearchManager:
         """Run the search agent for a given page number."""
         agent = build_job_searcher_agent(self.job_title, pageno)
         agent.mcp_servers = [server]
-        result = await Runner.run(agent, self.job_title)
+        print(f"\nSearching for jobs (page {pageno})...", end="")
+        result = await Runner.run(agent, self.job_title, run_config=RunConfig(workflow_name=f"search page {pageno}"))
         search_results: SearchResults = result.final_output
         return search_results.job_urls
 
@@ -190,8 +191,8 @@ class JobSearchManager:
         async with MCPServerStdio(
             params={
                 "command": "mcp-searxng",
-                "env": {"SEARXNG_URL": "http://localhost:8080/", "SEARXNG_MCP_TIMEOUT": "30"},
-                "client_session_timeout_seconds": 25,
+                "env": {"SEARXNG_URL": "http://localhost:8080/", "SEARXNG_MCP_TIMEOUT": "240"},
+                "client_session_timeout_seconds": 240,
             }
         ) as searxng_server:
             if self.urls:
@@ -214,7 +215,6 @@ class JobSearchManager:
 
             while True:
                 if not pending_urls:
-                    print(f"\nSearching for jobs (page {page})...", end="")
                     new_urls = await self.search_jobs(searxng_server, page)
                     print(f"Found {len(new_urls)} job URLs")
                     if not new_urls:
