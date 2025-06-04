@@ -38,14 +38,16 @@ class JobSearchManager:
                  resume_path: str, 
                  preferences_path: str, 
                  urls: Optional[List[str]] = None,
-                 top_n: Optional[int] = None,
-                 search_only: bool = False):
+                 desired_count: Optional[int] = None,
+                 search_only: bool = False,
+                 batch_size: int = 5):
         self.job_title = job_title
         self.resume_path = resume_path
         self.preferences_path = preferences_path
         self.urls = urls
-        self.top_n = top_n
+        self.desired_count = desired_count
         self.search_only = search_only
+        self.batch_size = batch_size
 
     def _message_filter(self, handoff_message_data: HandoffInputData) -> HandoffInputData:
         """Filter handoff messages to remove tool content and keep only recent history."""
@@ -116,15 +118,28 @@ class JobSearchManager:
                 )
 
     async def screen_multiple_jobs(self, urls: List[str]) -> Dict[str, Any]:
-        """Run screening of multiple job URLs in parallel and summarize results."""
+        """Run screening of multiple job URLs in parallel."""
         print(f"\nStarting parallel screening of {len(urls)} job postings...")
         tasks = [self._screen_single_job(url) for url in urls]
         results = await asyncio.gather(*tasks)
         return results
 
-    async def search_jobs(self, server) -> List[str]:
-        """Runs the search agent to retrieve a list of job URLs."""
-        agent = build_job_searcher_agent(self.job_title)
+    async def screen_jobs_in_batches(self, urls: List[str]) -> List[SummaryAgentOutput]:
+        """Screen URLs in batches respecting the batch_size setting."""
+        all_results: List[SummaryAgentOutput] = []
+        for i in range(0, len(urls), self.batch_size):
+            batch = urls[i : i + self.batch_size]
+            batch_results = await self.screen_multiple_jobs(batch)
+            all_results.extend(batch_results)
+            if self.desired_count is not None:
+                successful = [r for r in all_results if not r.failed]
+                if len(successful) >= self.desired_count:
+                    break
+        return all_results
+
+    async def search_jobs(self, server, pageno: int = 1) -> List[str]:
+        """Run the search agent for a given page number."""
+        agent = build_job_searcher_agent(self.job_title, pageno)
         agent.mcp_servers = [server]
         result = await Runner.run(agent, self.job_title)
         search_results: SearchResults = result.final_output
@@ -179,26 +194,51 @@ class JobSearchManager:
                 "client_session_timeout_seconds": 25,
             }
         ) as searxng_server:
-            # Determine URLs to process
             if self.urls:
                 print("\nManual override: using provided URLs and skipping search agent")
-                print(f"URLs: {self.urls}")
                 urls = self.urls
-            else:
-                print("\nSearching for jobs...",end="")
-                urls = await self.search_jobs(searxng_server)
-                print(f"Found {len(urls)} job URLs")
-            # Limit to top N if specified
-            if self.top_n is not None:
-                print(f"\nLimiting screening to top {self.top_n} URLs")
-                urls = urls[: self.top_n]
+                if self.search_only:
+                    print("\nSearch only mode: found URLs:")
+                    for url in urls:
+                        print(url)
+                    return {"urls": urls}
+                results = await self.screen_jobs_in_batches(urls)
+                self.compile_report(results)
+                return results
+
+            # Automatic search mode
+            page = 1
+            pending_urls: List[str] = []
+            results: List[SummaryAgentOutput] = []
+            successful = 0
+
+            while True:
+                if not pending_urls:
+                    print(f"\nSearching for jobs (page {page})...", end="")
+                    new_urls = await self.search_jobs(searxng_server, page)
+                    print(f"Found {len(new_urls)} job URLs")
+                    if not new_urls:
+                        break
+                    pending_urls.extend(new_urls)
+                    page += 1
+
+
+                batch = pending_urls[: self.batch_size]
+                pending_urls = pending_urls[self.batch_size:]
+                batch_results = await self.screen_multiple_jobs(batch)
+                results.extend(batch_results)
+                successful += len([r for r in batch_results if not r.failed])
+
+                if self.search_only:
+                    continue
+                if self.desired_count is not None and successful >= self.desired_count:
+                    break
+
             if self.search_only:
                 print("\nSearch only mode: found URLs:")
-                for url in urls:
+                for url in [r.url for r in results]:
                     print(url)
-                return {"urls": urls}
+                return {"urls": [r.url for r in results]}
 
-            # Run the screening pipeline via separate Playwright MCP server per URL
-            results = await self.screen_multiple_jobs(urls)
             self.compile_report(results)
-            return results 
+            return results
