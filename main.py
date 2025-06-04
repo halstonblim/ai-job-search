@@ -1,5 +1,8 @@
 import argparse
 import asyncio
+import logging
+from datetime import datetime
+from pathlib import Path
 from dotenv import load_dotenv
 
 from manager import JobSearchManager
@@ -36,11 +39,33 @@ def parse_args() -> argparse.Namespace:
         "-o", "--output", dest="output_path", required=True,
         help="File path to write TSV results for screening outputs"
     )
+    parser.add_argument(
+        "-l", "--log", dest="log_path",
+        help="File path to write logs"
+    )
     return parser.parse_args()
 
 
 async def main():
     args = parse_args()
+
+    # Setup logging
+    log_path = args.log_path
+    if not log_path:
+        log_dir = Path("logs")
+        log_dir.mkdir(exist_ok=True)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        slug = args.job_title.strip().lower().replace(" ", "_")
+        log_path = log_dir / f"{slug}_{timestamp}.log"
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        filename=str(log_path),
+        filemode="w",
+    )
+
+    logging.info(f"CLI arguments: {args}")
+
     manager = JobSearchManager(
         job_title=args.job_title,
         resume_path=args.resume_path,
@@ -60,13 +85,16 @@ async def main():
     # Write formatted SummaryAgentOutput results
     failed = False
     with open(args.output_path, "w", encoding="utf-8") as f:
-        f.write("="*80 + "\n" + "Job Search Results\n" + "="*80 + "\n\n")    
+        f.write("="*80 + "\n" + "Job Search Results\n" + "="*80 + "\n\n")
         for i, summary in enumerate(sorted(results, key=lambda x: 0 if x.fit_score is None else x.fit_score, reverse=True)):
             if not failed and summary.failed:
                 failed = True
-                f.write("\n\n" + "="*80 + "\n" + "Job Screening Failures\n" + "="*80 + "\n\n")            
+                f.write("\n\n" + "="*80 + "\n" + "Job Screening Failures\n" + "="*80 + "\n\n")
             f.write(f"=====Job Result {i+1}=====\n")
             f.write(repr(summary) + "\n\n")
+
+        report = manager.compile_report(results)
+        f.write(report + "\n")
             
 
 if __name__ == "__main__":
