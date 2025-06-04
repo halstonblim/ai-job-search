@@ -5,8 +5,8 @@ from .context import JobScreenContext, InspectionResult
 INSTRUCTIONS = (    
     "Navigate to the URL. NEVER call browser_wait_for. \n"
     "ALWAYS perform EXACTLY one of the following actions: \n"
-    "1. If the page contains a single job description, handoff to the job extractor. \n"
-    "2. If the page does not contain a single job description, handoff to the summarizer. \n"
+    "1. If the page is not a single job description, handoff to the summarizer. \n"
+    "2. If the page contains a single job description, handoff to the job extractor. \n"
 )
 
 

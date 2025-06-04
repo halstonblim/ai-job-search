@@ -29,6 +29,10 @@ def parse_args() -> argparse.Namespace:
         help="Only screen the first N URLs"
     )
     parser.add_argument(
+        "-m", "--min-successful", dest="min_successful", type=int,
+        help="Minimum number of successful job screenings desired; runs in batches until this threshold is met"
+    )
+    parser.add_argument(
         "-s", "--search-only", dest="search_only", action="store_true",
         help="Only run the search agent and output the URLs; skip screening"
     )
@@ -47,7 +51,8 @@ async def main():
         preferences_path=args.preferences_path,
         urls=args.urls,
         top_n=args.top_n,
-        search_only=args.search_only
+        search_only=args.search_only,
+        min_successful=args.min_successful
     )
     results = await manager.run()
     if args.search_only:

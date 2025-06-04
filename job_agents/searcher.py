@@ -17,11 +17,11 @@ class SearchResults(BaseModel):
     """The URLs of the job postings"""
 
 
-def build_job_searcher_agent(query: str):
+def build_job_searcher_agent(query: str, pageno: int = 1):
     INSTRUCTIONS = (
         f"You job is to search for {query} jobs. "
         "When searching, use the web_search tool and ALWAYS use the exact query "
-        f"{query} gh_jid' with pageno=1 and language='en'. "
+        f"{query} gh_jid' with pageno={pageno} and language='en'. "
         "Extract a list of URLs from the search results and store in the SearchResults.job_urls field. "
         "Only include URLs with a job id parameter like 'gh_jid' in the URL. "
     )

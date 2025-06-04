@@ -39,13 +39,15 @@ class JobSearchManager:
                  preferences_path: str, 
                  urls: Optional[List[str]] = None,
                  top_n: Optional[int] = None,
-                 search_only: bool = False):
+                 search_only: bool = False,
+                 min_successful: Optional[int] = None):
         self.job_title = job_title
         self.resume_path = resume_path
         self.preferences_path = preferences_path
         self.urls = urls
         self.top_n = top_n
         self.search_only = search_only
+        self.min_successful = min_successful
 
     def _message_filter(self, handoff_message_data: HandoffInputData) -> HandoffInputData:
         """Filter handoff messages to remove tool content and keep only recent history."""
@@ -122,13 +124,13 @@ class JobSearchManager:
         results = await asyncio.gather(*tasks)
         return results
 
-    async def search_jobs(self, server) -> List[str]:
+    async def search_jobs(self, server, pageno: int = 1) -> SearchResults:
         """Runs the search agent to retrieve a list of job URLs."""
-        agent = build_job_searcher_agent(self.job_title)
+        agent = build_job_searcher_agent(self.job_title, pageno)
         agent.mcp_servers = [server]
         result = await Runner.run(agent, self.job_title)
         search_results: SearchResults = result.final_output
-        return search_results.job_urls
+        return search_results
 
     def compile_report(self, raw_results: Dict[str, Any]):
         """Prints a short summary report of the screening results."""
@@ -179,6 +181,35 @@ class JobSearchManager:
                 "client_session_timeout_seconds": 25,
             }
         ) as searxng_server:
+            # Handle batching and pagination for minimum successful job screenings
+            if self.min_successful is not None and not self.urls:
+                results = []
+                successful_count = 0
+                page = 1
+                BATCH_SIZE = 5
+                # Loop until desired successful screenings reached or no more URLs
+                while successful_count < self.min_successful:
+                    print(f"\nSearching for jobs on page {page}...", end="")
+                    search_results = await self.search_jobs(searxng_server, page)
+                    urls_page = search_results.job_urls
+                    print(f" Found {len(urls_page)} URLs")
+                    if not urls_page:
+                        print("No more URLs available from search results.")
+                        break
+                    # Process in batches
+                    for i in range(0, len(urls_page), BATCH_SIZE):
+                        batch_urls = urls_page[i:i+BATCH_SIZE]
+                        batch_results = await self.screen_multiple_jobs(batch_urls)
+                        results.extend(batch_results)
+                        successful_count = len([r for r in results if not getattr(r, "failed", False)])
+                        print(f"Successful screenings so far: {successful_count}")
+                        if successful_count >= self.min_successful:
+                            break
+                    if successful_count >= self.min_successful:
+                        break
+                    page += 1
+                self.compile_report(results)
+                return results
             # Determine URLs to process
             if self.urls:
                 print("\nManual override: using provided URLs and skipping search agent")
@@ -186,8 +217,9 @@ class JobSearchManager:
                 urls = self.urls
             else:
                 print("\nSearching for jobs...",end="")
-                urls = await self.search_jobs(searxng_server)
-                print(f"Found {len(urls)} job URLs")
+                search_results = await self.search_jobs(searxng_server)
+                urls = search_results.job_urls
+                print(f"Found {len(urls)} job URLs on page {search_results.pageno}")
             # Limit to top N if specified
             if self.top_n is not None:
                 print(f"\nLimiting screening to top {self.top_n} URLs")
