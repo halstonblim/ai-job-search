@@ -1,0 +1,261 @@
+================================================================================
+Job Search Results
+================================================================================
+
+=====Job Result 1=====
+url:            http://job-boards.greenhouse.io/appliedintuition/jobs/4420849005?gh_jid=4420849005
+title:          Software Engineer - New Grad at Applied Intuition
+fit_score:      5
+reason:
+    The candidate is a senior full-stack software engineer with 7 years of
+    experience, including deep expertise in Python, React, Kubernetes, Docker, and
+    cloud infrastructure—all highly relevant to the job's requirements in
+    infrastructure, full-stack, and autonomy development. Their resume demonstrates
+    initiatives, problem-solving, and cross-domain collaboration, aligning very well
+    with the role's responsibilities. Technical skills match the 'nice to have' list
+    (React, Kubernetes, Docker), and the required experience level is exceeded. The
+    only minor misalignment is a stated preference for backend, while this role is
+    broad/full-stack, but the candidate's breadth makes them highly adaptable.
+    Strong fit overall.
+failed:         False
+error_message:
+    
+
+=====Job Result 2=====
+url:            https://www.samsara.com/company/careers/roles/6774592?gh_jid=6774592
+title:          Software Engineer - GenAI at Samsara
+fit_score:      5
+reason:
+    The candidate is an excellent fit for this role. Their 7 years of full-stack
+    software engineering experience exceeds the required 1-3 years. They have strong
+    backend and frontend exposure (Go, TypeScript, React, AWS), having shipped
+    customer-facing features and operated systems at scale. The candidate
+    specifically has Go, TypeScript, React, SQL, and extensive AWS experience, which
+    matches the stack mentioned in the job posting. They have demonstrated
+    ownership, system architecture, and operational engineering. While their resume
+    does not specifically mention LLM experience, all other technical and role
+    requirements are fully met, and the candidate brings even broader knowledge and
+    leadership experience than the role requires. Their preference for backend
+    aligns with the job's flexibility. This is a remote role and fits location
+    needs. Overall, this is an outstanding fit.
+failed:         False
+error_message:
+    
+
+=====Job Result 3=====
+url:            https://www.grammarly.com/careers/jobs/engineering/software-engineer-back-end?gh_jid=5856122
+title:          Software Engineer, Back-End at Grammarly
+fit_score:      4
+reason:
+    The candidate is a strong match for Grammarly's Back-End Software Engineer role.
+    They have 7 years of software engineering experience, well above the 3+ year
+    minimum, and significant backend expertise. Their resume shows extensive AWS
+    (used in production, with IaC via Terraform), large-scale system deployment, and
+    mentoring experience, all highlighted in the job description. The candidate has
+    not specifically worked with Java or JVM languages (preferred by Grammarly),
+    instead focusing on Python, Go, and TypeScript, which is the main gap. However,
+    their strong software engineering fundamentals and cloud experience offset this.
+    The candidate prefers Python (not Java), which is a minor mismatch, but the rest
+    of their preferences and profile align well with the job. Thus, this is a very
+    good (not perfect) fit, rated 4 out of 5.
+failed:         False
+error_message:
+    
+
+=====Job Result 4=====
+url:            https://camunda.com/jobs/?gh_jid=6496723003&utm_source=EU_Remote_Jobs
+title:          Software Engineer, Full Stack - Core Features at Camunda
+fit_score:      4
+reason:
+    The candidate has extensive full stack experience (7 years), strong React
+    skills, and significant backend experience with modern technologies and cloud
+    infrastructure. However, the job requires deep Java (Spring Boot) experience,
+    which the resume does not emphasize; the candidate prefers Python for backend,
+    and their Java expertise isn't evident. Otherwise, the experience with React,
+    microservices, cloud (though on AWS, not GCP), and full-stack ownership make the
+    candidate a strong match. This is not a perfect alignment due to the Java-
+    specific backend requirement but the overall profile is quite close to what the
+    job seeks.
+failed:         False
+error_message:
+    
+
+=====Job Result 5=====
+url:            https://www.avepoint.com/careers/job-detail?gh_jid=6767508
+title:          Software Engineer at AvePoint
+fit_score:      3
+reason:
+    The candidate exceeds the required experience (7 years vs. 3+) and has strong
+    full-stack skills, especially with React and modern JavaScript frameworks,
+    aligning well with the frontend tech (React, JavaScript) in the job description.
+    However, there is no explicit .NET (C#) or Java backend experience, which is a
+    key requirement for this job. Their backend expertise is in Python, Go, and
+    cloud is with AWS rather than Azure. The fit is good for full-stack and
+    frontend, but lacking in preferred backend stack (.NET/Java) and cloud (Azure).
+failed:         False
+error_message:
+    
+
+=====Job Result 6=====
+url:            https://careers.airbnb.com/positions/6887823/?gh_jid=6887823
+title:          Staff Software Engineer, Marketplace Operations at Airbnb
+fit_score:      3
+reason:
+    The candidate is an experienced backend engineer with 7 years of professional
+    experience, strong cloud infrastructure skills, and leadership/mentorship in
+    fast-scaling environments. However, the Airbnb role requires over 9 years of
+    industry experience and proficiency specifically in backend languages such as
+    Java or C++, which do not appear on the candidate’s resume (the resume lists
+    Python, Go, and TypeScript as main languages). While the candidate demonstrates
+    strong distributed systems and API experience, they fall short on both years of
+    experience and technology match. The role and the candidate's preferences both
+    align strongly for seniority and backend work, but there are two notable gaps
+    (years and required language). This makes for a moderate (3/5) fit.
+failed:         False
+error_message:
+    
+
+=====Job Result 7=====
+url:            https://camunda.com/jobs/?gh_jid=6243031003
+title:          Senior Software Engineer, Backend - AI at Camunda
+fit_score:      2
+reason:
+    The candidate does not have significant Java experience (the job requires 5+
+    years), nor explicit LLM API experience. The candidate is a strong backend/full-
+    stack engineer with Python, Go, and TypeScript but lacks Java on their resume
+    and prefers Python. Additionally, LLM/AI platform work is not highlighted in
+    their experience. The candidate meets the general experience level and back-end
+    focus preference, but tech stack mismatch makes fit low.
+failed:         False
+error_message:
+    
+
+=====Job Result 8=====
+url:            https://www.williamblair.com/careers/job-description?gh_jid=4655099007
+title:          Senior Software Development Analyst at William Blair
+fit_score:      2
+reason:
+    The applicant has over 6 years of software engineering experience and a strong
+    backend background with proficiency in Python and SQL, aligning with some core
+    requirements. However, this job requires extensive, hands-on experience (at
+    least 3 years) specifically with Azure Synapse, Azure Data Factory, ADLS, Spark,
+    Databricks, and other Azure tooling, which is not demonstrated in the
+    resume—instead, the candidate's cloud experience is with AWS and other tools.
+    There is also no evidence of experience with Azure DevOps, YML scripting for
+    Azure, Logic Apps, or financial services, nor knowledge in the preferred skills
+    like O365 SharePoint, Power Apps, or Microsoft Fabric. Thus, there are
+    significant skill and tooling mismatches, making this a poor fit for the role.
+failed:         False
+error_message:
+    
+
+=====Job Result 9=====
+url:            https://www.jumptrading.com/careers/6885296/?gh_jid=6885296
+title:          Campus Software Engineer (Intern) at Jump Trading Group
+fit_score:      2
+reason:
+    The candidate is a highly experienced full-stack/backend engineer with 7 years
+    of experience, strong skills in Python, Go, cloud infrastructure, and
+    distributed systems. However, the Jump Trading role is a 10-week internship
+    targeting students or very early-career candidates, with a strong preference for
+    C++ on Linux and intended for those seeking their first full-time opportunity
+    after graduation. The candidate's experience far exceeds internship
+    requirements, does not show C++ expertise, and their stated preferences are for
+    mid-to-senior backend roles (not internships or new grad positions). This is
+    therefore a poor fit.
+failed:         False
+error_message:
+    
+
+=====Job Result 10=====
+url:            https://www.brex.com/careers/7985666002?gh_jid=7985666002
+title:          Software Engineer, Intern at Brex
+fit_score:      1
+reason:
+    The job is an internship role intended for students, requiring availability in
+    late 2025 and likely pursuing a degree. The resume is for a highly experienced
+    engineer (7 years experience, prior senior roles). The candidate prefers backend
+    roles with a minimum of 3 years experience and explicitly indicates no interest
+    in new grad or intern positions. There is a clear mismatch between the seniority
+    and experience of the candidate and the entry-level nature of the job.
+failed:         False
+error_message:
+    
+
+=====Job Result 11=====
+url:            https://www.payoneer.com/careers/position/6585884/?gh_jid=6585884
+title:          Software Engineer Intern at Payoneer
+fit_score:      1
+reason:
+    The job is an internship role in Gurugram, India, while the candidate has 7
+    years of professional experience and is looking for backend engineering roles
+    requiring at least 3 years of experience. The candidate explicitly does not want
+    jobs intended for new graduates or interns. This is a poor fit.
+failed:         False
+error_message:
+    
+
+=====Job Result 12=====
+url:            https://www.cambridgeconsultants.com/jobs/cambridgeconsultantslimited/2025-graduate-software-engineer/?gh_jid=4418085101
+title:          2025 Graduate Software Engineer at Cambridge Consultants
+fit_score:      1
+reason:
+    The candidate has 7 years of experience and prefers backend roles using Python,
+    seeking positions that require at least 3 years of experience. The Cambridge
+    Consultants Graduate Software Engineer role is specifically targeted at fresh
+    graduates, making this a very poor fit for the candidate's experience and
+    preferences.
+failed:         False
+error_message:
+    
+
+
+
+================================================================================
+Job Screening Failures
+================================================================================
+
+=====Job Result 13=====
+url:            https://www.cadence.care/jobs/senior-software-engineer?gh_jid=4411448006
+title:          
+fit_score:      0
+reason:
+    Processing failed: Error invoking MCP tool browser_navigate: Timed out while
+    waiting for response to ClientRequest. Waited 60.0 seconds.
+failed:         True
+error_message:
+    Error invoking MCP tool browser_navigate: Timed out while waiting for response
+    to ClientRequest. Waited 60.0 seconds.
+
+=====Job Result 14=====
+url:            https://careers.roblox.com/jobs/6819493?gh_jid=6819493
+title:          
+fit_score:      
+reason:
+    
+failed:         True
+error_message:
+    Failed to navigate to the job URL due to an HTTP error.
+
+=====Job Result 15=====
+url:            
+title:          
+fit_score:      
+reason:
+    
+failed:         True
+error_message:
+    The URL https://careers.chewy.com/us/en/job/6937131?gh_jid=6937131 is not
+    reachable. Status code: 410 (Gone).
+
+
+============================================================
+JOB SCREENING REPORT
+============================================================
+Total jobs processed:    15
+Successful screenings:   12
+Failed screenings:       3
+Average fit score:       2.75
+High fit jobs (4-5):     4
+Medium fit jobs (2-3):   5
+Low fit jobs (1-2):      3

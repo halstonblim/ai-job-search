@@ -99,6 +99,8 @@ async def main():
     # Write formatted SummaryAgentOutput results
     failed = False
     with open(args.output_path, "w", encoding="utf-8") as f:
+        report = manager.compile_report(results)
+        f.write(report + "\n\n")
         f.write("="*80 + "\n" + "Job Search Results\n" + "="*80 + "\n\n")
         for i, summary in enumerate(sorted(results, key=lambda x: 0 if x.fit_score is None else x.fit_score, reverse=True)):
             if not failed and summary.failed:
@@ -107,9 +109,6 @@ async def main():
             f.write(f"=====Job Result {i+1}=====\n")
             f.write(repr(summary) + "\n\n")
 
-        report = manager.compile_report(results)
-        f.write(report + "\n")
-            
 
 if __name__ == "__main__":
     asyncio.run(main())
