@@ -40,10 +40,10 @@ This repository demonstrates a multi-agent system that automates the job search 
 
 Here are three ways to run the pipeline with the example files `example/resume.txt.sample` and `example/preferences.txt.sample`:
 
-1. Run the full search + screen pipeline and save results. Specifying `--top-n` means only up to `--top-n` URLs are sent through the job screening.
+1. Run the full search + screen pipeline and save results. Use `--desired-count` to keep searching additional pages until at least that many jobs are successfully screened.
 
 ```bash
-python main.py --job-title "software engineer" --resume example/resume.txt.sample --preferences example/preferences.txt.sample --output example/report.txt.sample --top-n 10
+python main.py --job-title "software engineer" --resume example/resume.txt.sample --preferences example/preferences.txt.sample --output example/report.txt.sample --desired-count 10
 ```
 - You can examine the output in `example/report.txt.sample`
 

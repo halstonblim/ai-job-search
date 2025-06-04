@@ -25,8 +25,8 @@ def parse_args() -> argparse.Namespace:
         help="File path to preferences (for the screening agent)"
     )
     parser.add_argument(
-        "-n", "--top-n", dest="top_n", type=int,
-        help="Only screen the first N URLs"
+        "-d", "--desired-count", dest="desired_count", type=int,
+        help="Desired number of successful job screenings"
     )
     parser.add_argument(
         "-s", "--search-only", dest="search_only", action="store_true",
@@ -46,7 +46,7 @@ async def main():
         resume_path=args.resume_path,
         preferences_path=args.preferences_path,
         urls=args.urls,
-        top_n=args.top_n,
+        desired_count=args.desired_count,
         search_only=args.search_only
     )
     results = await manager.run()
