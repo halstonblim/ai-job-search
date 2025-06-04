@@ -3,6 +3,7 @@ Manager script orchestrating the job search and screening pipeline.
 """
 import argparse
 import asyncio
+import logging
 from typing import List, Optional, Dict, Any
 from pathlib import Path
 from agents import Runner, handoff, HandoffInputData, RunConfig
@@ -101,7 +102,7 @@ class JobSearchManager:
                 # Start the handoff chain
                 domain_name = urlparse(url).netloc.replace("www.", "").split(".")[-2] # domain name before .com/org/etc
                 workflow_name = f"{domain_name} job screen"
-                print(f"\nStarting handoff chain for {workflow_name}...")
+                logging.info(f"Starting handoff chain for {workflow_name}...")
                 run_config = RunConfig(handoff_input_filter=self._message_filter, workflow_name=workflow_name)            
                 result = await Runner.run(url_checker_agent, input=url, context=context, run_config=run_config)
 
@@ -119,7 +120,7 @@ class JobSearchManager:
 
     async def screen_multiple_jobs(self, urls: List[str]) -> Dict[str, Any]:
         """Run screening of multiple job URLs in parallel."""
-        print(f"\nStarting parallel screening of {len(urls)} job postings...")
+        logging.info(f"Starting parallel screening of {len(urls)} job postings...")
         tasks = [self._screen_single_job(url) for url in urls]
         results = await asyncio.gather(*tasks)
         return results
@@ -141,13 +142,13 @@ class JobSearchManager:
         """Run the search agent for a given page number."""
         agent = build_job_searcher_agent(self.job_title, pageno)
         agent.mcp_servers = [server]
-        print(f"\nSearching for jobs (page {pageno})...", end="")
+        logging.info(f"Searching for jobs (page {pageno})...")
         result = await Runner.run(agent, self.job_title, run_config=RunConfig(workflow_name=f"search page {pageno}"))
         search_results: SearchResults = result.final_output
         return search_results.job_urls
 
-    def compile_report(self, raw_results: Dict[str, Any]):
-        """Prints a short summary report of the screening results."""
+    def compile_report(self, raw_results: Dict[str, Any]) -> str:
+        """Return a short summary report of the screening results."""
         successful = [r for r in raw_results if not getattr(r, "failed", False)]
         failed = [r for r in raw_results if getattr(r, "failed", False)]
         scores = [r.fit_score for r in successful if r.fit_score >= 0]
@@ -175,16 +176,20 @@ class JobSearchManager:
         medium = summary.get("medium_fit_jobs", 0)
         low = summary.get("low_fit_jobs", 0)
 
-        print("\n" + "=" * 60)
-        print("JOB SCREENING REPORT")
-        print("=" * 60)
-        print(f"Total jobs processed:    {total}")
-        print(f"Successful screenings:   {success}")
-        print(f"Failed screenings:       {failed}")
-        print(f"Average fit score:       {avg_score}")
-        print(f"High fit jobs (4-5):     {high}")
-        print(f"Medium fit jobs (2-3):   {medium}")
-        print(f"Low fit jobs (1-2):      {low}")
+        lines = [
+            "",
+            "=" * 60,
+            "JOB SCREENING REPORT",
+            "=" * 60,
+            f"Total jobs processed:    {total}",
+            f"Successful screenings:   {success}",
+            f"Failed screenings:       {failed}",
+            f"Average fit score:       {avg_score}",
+            f"High fit jobs (4-5):     {high}",
+            f"Medium fit jobs (2-3):   {medium}",
+            f"Low fit jobs (1-2):      {low}",
+        ]
+        return "\n".join(lines)
 
     async def run(self) -> Dict[str, Any]:
         """Main entrypoint for running the manager."""
@@ -196,15 +201,14 @@ class JobSearchManager:
             }
         ) as searxng_server:
             if self.urls:
-                print("\nManual override: using provided URLs and skipping search agent")
+                logging.info("Manual override: using provided URLs and skipping search agent")
                 urls = self.urls
                 if self.search_only:
-                    print("\nSearch only mode: found URLs:")
+                    logging.info("Search only mode: found URLs:")
                     for url in urls:
-                        print(url)
+                        logging.info(url)
                     return {"urls": urls}
                 results = await self.screen_jobs_in_batches(urls)
-                self.compile_report(results)
                 return results
 
             # Automatic search mode
@@ -216,7 +220,7 @@ class JobSearchManager:
             while True:
                 if not pending_urls:
                     new_urls = await self.search_jobs(searxng_server, page)
-                    print(f"Found {len(new_urls)} job URLs")
+                    logging.info(f"Found {len(new_urls)} job URLs")
                     if not new_urls:
                         break
                     pending_urls.extend(new_urls)
@@ -235,10 +239,8 @@ class JobSearchManager:
                     break
 
             if self.search_only:
-                print("\nSearch only mode: found URLs:")
+                logging.info("Search only mode: found URLs:")
                 for url in [r.url for r in results]:
-                    print(url)
+                    logging.info(url)
                 return {"urls": [r.url for r in results]}
-
-            self.compile_report(results)
             return results

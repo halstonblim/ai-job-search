@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from agents import RunContextWrapper, function_tool, ToolsToFinalOutputResult, FunctionToolResult
 from typing import Literal
 import textwrap
+import logging
 
 
 class JobScreenContext(BaseModel):
@@ -179,4 +180,4 @@ async def record_error_on_handoff(ctx: RunContextWrapper[JobScreenContext], erro
     """Record the error message in the context"""
     ctx.context.error_message = error_message.message
     ctx.context.failed = True
-    print(f"\n⚠️ Unable to screen job posting:\n\n{repr(error_message)}")
+    logging.warning(f"Unable to screen job posting: {repr(error_message)}")
