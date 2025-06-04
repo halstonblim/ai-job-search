@@ -33,7 +33,7 @@ An OpenAI Agents SDK-based multi-agent system with specialized agents to:
 
 ## Usage
 
-Here are three ways to run the pipeline with the sample files `example/resume.txt.sample` and `example/preferences.txt.sample`:
+Here are three ways to run the pipeline, demonstrated with the sample files `example/resume.txt.sample` and `example/preferences.txt.sample`:
 
 1. Run the full search + screening pipeline and save results. Use `--desired-count` to keep searching additional pages until at least that many jobs are successfully screened.
 
@@ -59,7 +59,7 @@ python main.py --job_title "software engineer" --search-only --output example/re
 ### Job Searcher
 
 - Utilizes the `web_search` tool provided by the **mcp-searxng** MCP server to discover job posting URLs.
-- For now, issues queries in the format `"<job title> gh_jid"` with `pageno=1` and `language='en'`.
+- For now, issues queries in the format `"<job title> gh_jid"`. Starts on page 1, but continues searching next pages until desired count is reached
 - Outputs a list of job URLs wrapped in the `SearchResults` model.
 
 ### Job Screener Multi-Agent
