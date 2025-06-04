@@ -175,9 +175,12 @@ class JobSearchManager:
         async with MCPServerStdio(
             params={
                 "command": "mcp-searxng",
-                "env": {"SEARXNG_URL": "http://localhost:8080/", "SEARXNG_MCP_TIMEOUT": "30"},
-                "client_session_timeout_seconds": 25,
-            }
+                "env": {
+                    "SEARXNG_URL": "http://localhost:8080/",
+                    "SEARXNG_MCP_TIMEOUT": "30",
+                },
+            },
+            client_session_timeout_seconds=25,
         ) as searxng_server:
             # Determine URLs to process
             if self.urls:
