@@ -2,17 +2,16 @@
 
 ![Multi-agentic workflow](flowchart.png)
 
-## Autonomous Multi-Agent Job Discovery & Screening Orchestration
+## Automated Job Discovery & Screening
 
-This repository demonstrates a multi-agent system that automates the job search process. Built with the OpenAI Agents SDK, it uses specialized agents working together to handle different aspects of screening and analysis that would be difficult for any single agent to manage alone. This entire process is split into two stages:
-
-1. **Job Searcher**: Gathers a list of job posting URLs.
-2. **Job Screener**: Takes those URLs and, in parallel, evaluates each one against the user’s resume and preferences. For every job URL, it returns a fit score and a short rationale explaining why it’s a good (or poor) match.
+An OpenAI Agents SDK-based multi-agent system with specialized agents to:
+1. **Search**: Collect job posting URLs.
+2. **Screen**: Evaluate each URL against your resume and preferences concurrently, returning fit scores and rationales.
 
 ## Table of Contents
 
 - [Key Features](#key-features)
-- [Example](#example)
+- [Usage](#usage)
 - [Agent Descriptions](#agent-descriptions)
   - [Job Searcher](#job-searcher)
   - [Job Screener Multi-Agent](#job-screener-multi-agent)
@@ -27,36 +26,32 @@ This repository demonstrates a multi-agent system that automates the job search 
 
 ## Key Features
 
-**Multi-Agent Architecture**
-* Specialist agents work together through defined handoffs points and shared context. While some agents pass tasks sequentially (handoff collaboration), others run side by side (parallel execution).
+- Multi-Agent Workflow: Specialized agents collaborate sequentially and in parallel.
+- MCP Integration: SearxNG for web search and Playwright for dynamic content.
+- Fault Tolerance: Automatic error handling and graceful degradation.
+- Batch Processing: Default batch size of 5–10 jobs balances throughput and resource usage (each requires a separate Playwright MCP session).
 
-**MCP-Powered Tool Ecosystem**
-* Leverages multiple Model Context Protocol (MCP) servers. For example, it uses SearxNG to handle web searches and Playwright to render JavaScript-heavy pages. This setup demonstrates how the system can call everything from simple Python functions to external MCP services.
+## Usage
 
-**Built-In Resilience**
-* The framework automatically catches and logs errors (network failures, unexpected page content, etc.) and modifies the handoff chain. That way, individual failures don’t stop the overall process.
+Here are three ways to run the pipeline with the sample files `example/resume.txt.sample` and `example/preferences.txt.sample`:
 
-## Example
-
-Here are three ways to run the pipeline with the example files `example/resume.txt.sample` and `example/preferences.txt.sample`:
-
-1. Run the full search + screen pipeline and save results. Use `--desired-count` to keep searching additional pages until at least that many jobs are successfully screened.
+1. Run the full search + screening pipeline and save results. Use `--desired-count` to keep searching additional pages until at least that many jobs are successfully screened.
 
 ```bash
-python main.py --job-title "software engineer" --resume example/resume.txt.sample --preferences example/preferences.txt.sample --output example/report.txt.sample --desired-count 10
+python main.py --job_title "software engineer" --output example/report.txt.sample --resume example/resume.txt.sample --preferences example/preferences.txt.sample --log example/logging.log.sample --desired-count 10
 ```
 - You can examine the output in `example/report.txt.sample`
 
 2. Screen only mode, if the user-provides URLs (can be single URL or list of URLs)
 
 ```bash
-python main.py --job-title "software engineer" --resume example/resume.txt.sample --preferences example/preferences.txt.sample --output example/report.txt.sample --urls https://company.com/careers/ai-engineer-ii https://greenhouse.io/jobs/ml-scientist
+python main.py --job_title "software engineer" --resume example/resume.txt.sample --preferences example/preferences.txt.sample --output example/report.txt.sample --urls https://company.com/careers/ai-engineer-ii https://greenhouse.io/jobs/ml-scientist
 ```
 
 3. Search only mode, just return URLs without screening
 
 ```bash
-python main.py --job-title "software engineer" --search-only --output example/report.txt.sample 
+python main.py --job_title "software engineer" --search-only --output example/report.txt.sample 
 ```
 
 ## Agent Descriptions
@@ -102,7 +97,7 @@ In addition to the agents, the system includes local context and handoffs betwee
 
 ### mcp-searxng (Web Search)
 
-We use SearXNG as a lean search tool alternative which avoids limits typical of other search engines, e.g.
+We use SearXNG as a lean web search tool for the **JobSearcher** agent to avoid limits typical of other search engines, e.g.
 - Google Custom Search Engine limits number of results to 100 per query
 - Tavily limits the result to 20 per query
 
@@ -136,6 +131,10 @@ To install and configure this server locally:
 
 Used by the **PageInspector** and **ExtractJobDescription** agents to render JavaScript-driven pages:
 
+0. Install [playwright-mcp](https://github.com/microsoft/playwright-mcp)
+   ```bash
+   npm install -g @playwright/mcp
+   ```
 1. Ensure a `playwright_config/config.json` file is present (configures headless Chromium).
 2. Start the Playwright MCP server:
    ```bash
@@ -160,6 +159,8 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
+
+> Note: Before proceeding, configure and start the MCP servers first (see [MCP Servers](#mcp-servers)).
 
 Configure your environment in a `.env` file:
 ```ini
@@ -203,7 +204,8 @@ python searxng_mcp_tutorial.py
 ├── example/                      # Sample input/output files
 │   ├── resume.txt.sample
 │   ├── preferences.txt.sample
-│   └── result.txt.sample
+│   ├── logging.log.sample
+│   └── report.txt.sample
 ├── requirements.txt              # Python dependencies
 └── README.md                     # This file
 ```
